@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mybatis.demo.repository.FacultyMapper">
+
+    <resultMap id="facultyResultMap" type="com.mybatis.demo.dto.FacultyResponseDTO">
+        <result property="id" column="faculty_id" />
+        <result property="studentName" column="first_name" />
+        <result property="studentRollNo" column="roll_no" />
+        <result property="className" column="class_name" />
+        <result property="classCode" column="class_code" />
+        <result property="facultyName" column="name" />
+        <result property="facultyCode" column="faculty_code" />
+    </resultMap>
+
+    <select id="getFacultyInformation" resultMap="facultyResultMap" parameterType="String">
+        select distinct s.first_name,s.roll_no,c.class_name,c.class_code,f.name,f.faculty_code
+        from student s inner join student_class c on s.class_name=c.class_name
+        inner join faculty f on c.class_name = f.class_name where f.faculty_code=#{facultyCode}
+
+    </select>
+
+    <select id="getFacultyByFacultyCode" resultType="String" parameterType="String">
+        select faculty_code from faculty where faculty_code = #{facultyCode}
+    </select>
+
+
+
+</mapper>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mybatis.demo.repository.StudentMapper">
+
+    <resultMap id="studentResultMap" type="com.mybatis.demo.entity.Student">
+        <result property="id" column="student_id" />
+        <result property="rollNo" column="roll_no" />
+        <result property="firstName" column="first_name" />
+        <result property="lastName" column="last_name" />
+        <result property="address" column="address" />
+        <result property="city" column="city" />
+        <result property="className" column="class_name" />
+        <result property="deleted" column="deleted" />
+
+    </resultMap>
+
+    <select id="getAllStudents" resultMap="studentResultMap">
+        SELECT * from student where deleted = 0
+
+    </select>
+
+    <select id="getStudentByRollNo" resultMap="studentResultMap" parameterType="String">
+        select * from student where roll_no = #{rollNo} and deleted = 0
+    </select>
+
+    <insert id="saveStudent" parameterType="Student">
+        insert into student (roll_no, first_name, last_name, class_name, address, city, deleted)
+        values (#{rollNo}, #{firstName}, #{lastName}, #{className}, #{address}, #{city} , #{deleted})
+    </insert>
+
+    <update id="updateStudent" parameterType="Student">
+        update student set first_name = #{firstName} , last_name = #{lastName},class_name = #{className}, address = #{address} , city = #{city}
+        where roll_no = #{rollNo}
+    </update>
+    <update id="deleteStudent" parameterType="String">
+        update student set deleted = 1 where roll_no = #{rollNo}
+    </update>
+
+    <select id="getStudentCountByClass" resultType="Integer" parameterType="String">
+        select count(*) from student where class_name = #{className};
+
+    </select>
+
+    <select id="getFilteredStudent" resultType="Student" parameterType="SearchDTO" resultMap="studentResultMap">
+        select * from student where
+        deleted = 0
+        <if test="firstName != null">
+            AND first_name like #{firstName}
+        </if>
+        <if test="lastName != null">
+            AND last_name like #{lastName}
+        </if>
+        <if test="className != null">
+            AND class_name like #{className}
+        </if>
+        <if test="city != null">
+            AND city like #{city}
+        </if>
+    </select>
+
+    <select id="getListOfStudent" resultMap="studentResultMap" parameterType="List">
+        select * from student where deleted = 0
+        AND roll_no IN
+        <foreach item="rollNoList" collection="list"
+                 open="(" separator="," close=")">
+                #{rollNoList}
+        </foreach>
+    </select>
+
+</mapper>

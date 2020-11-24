@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-2.1.3.min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.2/underscore-min.js"
+            type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"
+            type="text/javascript"></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+          integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <<title>BACKBONE</title>
+</head>
+<body>
+<div id="content"></div>
+
+<script type="text/template" id="tem">
+
+    <div class="container">
+        <h1> Student Details </h1>
+        <a href="#/addNew" class="btn btn-primary btn-sm mb-3">Add New Student</a>
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Roll No</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Class Name</th>
+                <th scope="col">Address</th>
+                <th scope="col">City</th>
+                <th scope="col">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% _.each(model.data,function(item){%>
+            <tr>
+                <th scope="row"><%= item.id %></th>
+                <td><span class="rollNo"><%= item.rollNo %></span></td>
+                <td><span class="firstName"><%= item.firstName %></span></td>
+                <td><span class="lastName"><%= item.lastName %></span></td>
+                <td><span class="className"><%= item.className %></span></td>
+                <td><span class="address"><%= item.address %></span></td>
+                <td><span class="city"><%= item.city %></span></td>
+
+                <td>
+                    <button id="edit" class="btn btn-warning btn-sm mb-3" >Edit</button>
+                    <button id="delete" class="btn btn-danger btn-sm mb-3" value="<%= item.rollNo %>">Delete</button>
+                    <button id="update" class="btn btn-success btn-sm mb-3" value="<%= item.rollNo %>" style="display: none">Update</button>
+                    <button id="cancel" class="btn btn-danger btn-sm mb-3" style="display: none">Cancel</button>
+                </td>
+            </tr>
+            <%}) %>
+            </tbody>
+        </table>
+    </div>
+</script>
+
+<script type="text/template" id="addNew">
+    <div class="container">
+        <h2>Student Creation Form</h2><br>
+        <a href="" class="btn btn-primary btn-sm mb-3">Go Back</a>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Roll No</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Class Name</th>
+                <th scope="col">Address</th>
+                <th scope="col">City</th>
+                <th scope="col">Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="rollNo" required>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="firstName" required>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="lastName" required>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <select name="className" id="className" class="form-control">
+                            <option value="BTech">BTech</option>
+                            <option value="BCom">BCom</option>
+                        </select>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="address" required>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="city" required>
+                    </div>
+                </td>
+
+
+                <td>
+                    <button class="btn btn-primary" id="add-new">Submit</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+
+    </div>
+
+</script>
+
+<script type="text/template" id="edit-temp">
+
+</script>
+
+<script type="text/javascript">
+
+    var Student = Backbone.Model.extend({
+        urlRoot: "/students/"
+    });
+    var FirstView = Backbone.View.extend({
+        el: "#content",
+        model: new Student,
+        template: _.template($("#tem").html()),
+        events: {
+            "click #delete": "delete",
+            "click #edit": "edit",
+            "click #cancel": "cancel",
+            "click #update": "update"
+        },
+        delete: function () {
+            console.log(this.$("#delete").val());
+            console.log($("#delete").val());
+            var stud = new Student({id: this.$("#delete").val()});
+            console.log("deleting sttudent with roll no " + $("#delete").val());
+            stud.destroy({
+                success:function (response) {
+                    alert("Studen with id "+response.toJSON().id + " deleted");
+                    console.log(response.toJSON().id);
+                    location.reload(true);
+                },
+                error: function (errorResponse) {
+                    console.log(errorResponse.toJSON());
+                }
+            });
+        },
+        edit: function () {
+            console.log("Editing sttudent with roll no" + $("#edit").val());
+
+            $("#edit").hide();
+            $("#delete").hide();
+            this.$("#update").show();
+            this.$("#cancel").show();
+
+            // var rollNo = this.$(".rollNo").html();
+            var firstName = this.$(".firstName").html();
+            var lastName = this.$(".lastName").html();
+            var className = this.$(".className").html();
+            var address = this.$(".address").html();
+            var city = this.$(".city").html();
+
+            //this.$(".rollNo").html("<input type='text' class='form-control' id='update-rollNo' value='" + rollNo + "'>");
+            this.$(".firstName").html("<input type='text' class='form-control' id='update-firstName' value='" + firstName + "'>");
+            this.$(".lastName").html("<input type='text' class='form-control' id='update-lastName' value='" + lastName + "'>");
+            this.$(".className").html("<input type='text' class='form-control' id='update-className' value='" + className + "'>");
+            this.$(".address").html("<input type='text' class='form-control' id='update-address' value='" + address + "'>");
+            this.$(".city").html("<input type='text' class='form-control' id='update-city' value='" + city + "'>");
+
+            //alert("Update Successfully");
+        },
+        update:function(){
+            console.log($("#update").val());
+            var stud = new Student({id: this.$("#update").val()});
+            stud.set("rollNo",$("#update").val())
+            stud.set("firstName",$("#update-firstName").val());
+            stud.set("lastName",$("#update-lastName").val());
+            stud.set("className",$("#update-className").val());
+            stud.set("address",$("#update-address").val());
+            stud.set("city",$("#update-city").val());
+            stud.save(null,{
+                success:function (response) {
+                    alert(response.toJSON().message);
+                    location.reload(true);
+
+                },
+                error:function (errorResponse) {
+                    console.log(errorResponse.toJSON());
+                }
+            });
+
+        },
+        cancel: function () {
+            this.render();
+        },
+        initialize: function () {
+            this.render();
+        },
+        render: function () {
+            var that = this;
+            this.model.fetch({
+                success: function (response) {
+                    model = response.toJSON();
+                    that.$el.html(that.template(model));
+                    console.log(model);
+                },
+                error: function (errorResponse) {
+                    console.log(errorResponse)
+                }
+            });
+            console.log("view is running..");
+        }
+
+    });
+
+    var AddNew = Backbone.View.extend({
+        el: "#content",
+        template: _.template($("#addNew").html()),
+        events: {
+            "click #add-new": "AddNew"
+        },
+        AddNew: function () {
+            var studentObj = new Student({
+                rollNo: $("#rollNo").val(),
+                firstName: $("#firstName").val(),
+                lastName: $("#lastName").val(),
+                className: $("#className").val(),
+                address: $("#address").val(),
+                city: $("#city").val(),
+
+
+            });
+            $("#rollNo").val(""),
+                $("#firstName").val(""),
+                $("#lastName").val(""),
+                $("#className").val(""),
+                $("#address").val(""),
+                $("#city").val(""),
+
+                console.log(studentObj.toJSON());
+                studentObj.save(null ,{
+                success: function (response) {
+                    console.log(response.toJSON().message);
+                    alert(response.toJSON().message)
+                },
+                error: function (errorResponse) {
+                    console.log(errorResponse.toJSON());
+                }
+            });
+        },
+        initialize: function () {
+            this.render();
+        },
+        render: function () {
+            console.log("this is view 2");
+            this.$el.html(this.template);
+
+        }
+    });
+
+    var EditView = Backbone.View.extend({
+        el: "#content",
+        model: new Student(),
+        template: _.template($("#edit-temp").html()),
+        initialize: function () {
+            this.render();
+
+        },
+        render: function () {
+            // var rollno = $("#rollNo").val();
+            // console.log(rollno);
+            // var anchor = document.querySelector('a'),
+            //     url = anchor.getAttribute('href');
+            // var text = anchor.getText('href');
+            // console.log(text);
+            // //var text = anchor.getText();
+            // console.log(url);
+
+            //alert(url);
+            this.$el.html(this.template());
+
+        }
+
+
+    });
+
+    var SystemRouter = Backbone.Router.extend({
+
+        routes: {
+            "": "students",
+            "addNew": "addNew",
+            "editView": "editView"
+
+        },
+
+        students: function () {
+            console.log("view 1");
+            var firstView = new FirstView();
+        },
+
+        addNew: function () {
+            console.log("view 2");
+            var obj2 = new AddNew();
+        },
+        editView: function () {
+            console.log("edit form view");
+            var obj3 = new EditView();
+
+        }
+
+    });
+
+    var systemRouter = new SystemRouter();
+    Backbone.history.start();
+</script>
+
+</body>
+</html>
