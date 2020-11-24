@@ -50,9 +50,11 @@
                 <td><span class="city"><%= item.city %></span></td>
 
                 <td>
-                    <button id="edit" class="btn btn-warning btn-sm mb-3" >Edit</button>
+                    <button id="edit" class="btn btn-warning btn-sm mb-3" value="<%= item.rollNo %>">Edit</button>
                     <button id="delete" class="btn btn-danger btn-sm mb-3" value="<%= item.rollNo %>">Delete</button>
-                    <button id="update" class="btn btn-success btn-sm mb-3" value="<%= item.rollNo %>" style="display: none">Update</button>
+                    <button id="update" class="btn btn-success btn-sm mb-3" value="<%= item.rollNo %>"
+                            style="display: none">Update
+                    </button>
                     <button id="cancel" class="btn btn-danger btn-sm mb-3" style="display: none">Cancel</button>
                 </td>
             </tr>
@@ -146,15 +148,13 @@
             "click #cancel": "cancel",
             "click #update": "update"
         },
-        delete: function () {
-            console.log(this.$("#delete").val());
-            console.log($("#delete").val());
-            var stud = new Student({id: this.$("#delete").val()});
-            console.log("deleting sttudent with roll no " + $("#delete").val());
+        delete: function (e) {
+            console.log(jQuery(e.currentTarget).val());
+            var stud = new Student({id: jQuery(e.currentTarget).val()});
+            console.log("deleting sttudent with roll no " + jQuery(e.currentTarget).val());
             stud.destroy({
-                success:function (response) {
-                    alert("Studen with id "+response.toJSON().id + " deleted");
-                    console.log(response.toJSON().id);
+                success: function (model, response) {
+                    alert(response.message);
                     location.reload(true);
                 },
                 error: function (errorResponse) {
@@ -162,13 +162,15 @@
                 }
             });
         },
-        edit: function () {
-            console.log("Editing sttudent with roll no" + $("#edit").val());
+        edit: function (e) {
+            console.log("Editing sttudent with roll no " + jQuery(e.currentTarget).val());
 
-            $("#edit").hide();
-            $("#delete").hide();
-            this.$("#update").show();
-            this.$("#cancel").show();
+            jQuery("#edit").hide();
+            jQuery("#delete").hide();
+            jQuery("#update").show();
+            jQuery("#cancel").show();
+            console.log(jQuery(e.firstName).html(e));
+            console.log(jQuery(e.firstName).html().toJSON());
 
             // var rollNo = this.$(".rollNo").html();
             var firstName = this.$(".firstName").html();
@@ -186,22 +188,22 @@
 
             //alert("Update Successfully");
         },
-        update:function(){
-            console.log($("#update").val());
-            var stud = new Student({id: this.$("#update").val()});
-            stud.set("rollNo",$("#update").val())
-            stud.set("firstName",$("#update-firstName").val());
-            stud.set("lastName",$("#update-lastName").val());
-            stud.set("className",$("#update-className").val());
-            stud.set("address",$("#update-address").val());
-            stud.set("city",$("#update-city").val());
-            stud.save(null,{
-                success:function (response) {
+        update: function (e) {
+            console.log("Updating student with roll no "+ jQuery(e.currentTarget).val());
+            var stud = new Student({id: jQuery(e.currentTarget).val()});
+            stud.set("rollNo", $("#update").val())
+            stud.set("firstName", $("#update-firstName").val());
+            stud.set("lastName", $("#update-lastName").val());
+            stud.set("className", $("#update-className").val());
+            stud.set("address", $("#update-address").val());
+            stud.set("city", $("#update-city").val());
+            stud.save(null, {
+                success: function (response) {
                     alert(response.toJSON().message);
                     location.reload(true);
 
                 },
-                error:function (errorResponse) {
+                error: function (errorResponse) {
                     console.log(errorResponse.toJSON());
                 }
             });
@@ -255,13 +257,13 @@
                 $("#city").val(""),
 
                 console.log(studentObj.toJSON());
-                studentObj.save(null ,{
+            studentObj.save(null, {
                 success: function (response) {
                     console.log(response.toJSON().message);
                     alert(response.toJSON().message)
                 },
                 error: function (errorResponse) {
-                    console.log(errorResponse.toJSON());
+                    alert(errorResponse.toJSON());
                 }
             });
         },
