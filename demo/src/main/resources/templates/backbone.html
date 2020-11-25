@@ -6,6 +6,8 @@
             type="text/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"
             type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
           integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
@@ -14,7 +16,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
-    <<title>BACKBONE</title>
+    <title>BACKBONE</title>
 </head>
 <body>
 <div id="content"></div>
@@ -25,7 +27,7 @@
         <h1> Student Details </h1>
         <a href="#/addNew" class="btn btn-primary btn-sm mb-3">Add New Student</a>
 
-        <table class="table table-striped">
+        <table class="table table-striped" id="studentTable">
             <thead>
             <tr>
                 <th scope="col">ID</th>
@@ -43,19 +45,23 @@
             <tr>
                 <th scope="row"><%= item.id %></th>
                 <td><span class="rollNo"><%= item.rollNo %></span></td>
-                <td><span class="firstName"><%= item.firstName %></span></td>
-                <td><span class="lastName"><%= item.lastName %></span></td>
-                <td><span class="className"><%= item.className %></span></td>
-                <td><span class="address"><%= item.address %></span></td>
-                <td><span class="city"><%= item.city %></span></td>
+                <td contenteditable='false'><span class="firstName"><%= item.firstName %></span></td>
+                <td contenteditable='false'><span class="lastName"><%= item.lastName %></span></td>
+                <td contenteditable='false'><span class="className"><%= item.className %></span></td>
+                <td contenteditable='false'><span class="address"><%= item.address %></span></td>
+                <td contenteditable='false'><span class="city"><%= item.city %></span></td>
 
                 <td>
-                    <button id="edit" class="btn btn-warning btn-sm mb-3" value="<%= item.rollNo %>">Edit</button>
+                    <!--<button id="edit" class="btn btn-warning btn-sm mb-3" value="<%= item.rollNo%>,<%=item.firstName%>,<%=item.lastName%>,<%=item.className%>,<%=item.address%>,<%=item.city%> ">Edit</button>-->
+                    <!--<button id="edit" class="btn btn-warning btn-sm mb-3" value="<%= item.rollNo%>">Edit</button>-->
+                    <a href="#/editView/<%= item.rollNo %>" id="edit-link" value="<%= item.rollNo %>"
+                       class="btn btn-warning btn-sm mb-3">Edit</a>
+                    <!--<button id="update" class="btn btn-warning btn-sm mb-3" value="<%= item.rollNo%>">Update</button>-->
                     <button id="delete" class="btn btn-danger btn-sm mb-3" value="<%= item.rollNo %>">Delete</button>
-                    <button id="update" class="btn btn-success btn-sm mb-3" value="<%= item.rollNo %>"
-                            style="display: none">Update
-                    </button>
-                    <button id="cancel" class="btn btn-danger btn-sm mb-3" style="display: none">Cancel</button>
+                    <!--<button id="update" class="btn btn-success btn-sm mb-3" value="<%= item.rollNo %>"-->
+                    <!--style="display: none">Update-->
+                    <!--</button>-->
+                    <!--<button id="cancel" class="btn btn-danger btn-sm mb-3" style="display: none">Cancel</button>-->
                 </td>
             </tr>
             <%}) %>
@@ -130,10 +136,72 @@
 </script>
 
 <script type="text/template" id="edit-temp">
+    <div class="container">
+        <h2>Student Updation Form</h2><br>
+        <a href="" class="btn btn-primary btn-sm mb-3">Cancel</a>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Roll No</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Class Name</th>
+                <th scope="col">Address</th>
+                <th scope="col">City</th>
+                <th scope="col">Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="update-rollNo" value="<%= rollNo%>" readonly>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="update-firstName" value="<%= firstName%>" required>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="update-lastName" value="<%= lastName%>" required>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <select name="className" id="update-className" class="form-control">
+                            <option value="<%= className%>"><%=className%></option>
+                            <option value="BTech">BTech</option>
+                            <option value="BCom">BCom</option>
+                        </select>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="update-address" value="<%= address%>" required>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="update-city" value="<%= city%>" required>
+                    </div>
+                </td>
 
+
+                <td>
+                    <button class="btn btn-primary" id="update-btn" value="<%= rollNo%>">Update</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+
+    </div>
 </script>
 
 <script type="text/javascript">
+
 
     var Student = Backbone.Model.extend({
         urlRoot: "/students/"
@@ -143,10 +211,7 @@
         model: new Student,
         template: _.template($("#tem").html()),
         events: {
-            "click #delete": "delete",
-            "click #edit": "edit",
-            "click #cancel": "cancel",
-            "click #update": "update"
+            "click #delete": "delete"
         },
         delete: function (e) {
             console.log(jQuery(e.currentTarget).val());
@@ -155,62 +220,13 @@
             stud.destroy({
                 success: function (model, response) {
                     alert(response.message);
+                    //systemRouter.navigate("",{trigger:true});
                     location.reload(true);
                 },
                 error: function (errorResponse) {
                     console.log(errorResponse.toJSON());
                 }
             });
-        },
-        edit: function (e) {
-            console.log("Editing sttudent with roll no " + jQuery(e.currentTarget).val());
-
-            jQuery("#edit").hide();
-            jQuery("#delete").hide();
-            jQuery("#update").show();
-            jQuery("#cancel").show();
-            console.log(jQuery(e.firstName).html(e));
-            console.log(jQuery(e.firstName).html().toJSON());
-
-            // var rollNo = this.$(".rollNo").html();
-            var firstName = this.$(".firstName").html();
-            var lastName = this.$(".lastName").html();
-            var className = this.$(".className").html();
-            var address = this.$(".address").html();
-            var city = this.$(".city").html();
-
-            //this.$(".rollNo").html("<input type='text' class='form-control' id='update-rollNo' value='" + rollNo + "'>");
-            this.$(".firstName").html("<input type='text' class='form-control' id='update-firstName' value='" + firstName + "'>");
-            this.$(".lastName").html("<input type='text' class='form-control' id='update-lastName' value='" + lastName + "'>");
-            this.$(".className").html("<input type='text' class='form-control' id='update-className' value='" + className + "'>");
-            this.$(".address").html("<input type='text' class='form-control' id='update-address' value='" + address + "'>");
-            this.$(".city").html("<input type='text' class='form-control' id='update-city' value='" + city + "'>");
-
-            //alert("Update Successfully");
-        },
-        update: function (e) {
-            console.log("Updating student with roll no "+ jQuery(e.currentTarget).val());
-            var stud = new Student({id: jQuery(e.currentTarget).val()});
-            stud.set("rollNo", $("#update").val())
-            stud.set("firstName", $("#update-firstName").val());
-            stud.set("lastName", $("#update-lastName").val());
-            stud.set("className", $("#update-className").val());
-            stud.set("address", $("#update-address").val());
-            stud.set("city", $("#update-city").val());
-            stud.save(null, {
-                success: function (response) {
-                    alert(response.toJSON().message);
-                    location.reload(true);
-
-                },
-                error: function (errorResponse) {
-                    console.log(errorResponse.toJSON());
-                }
-            });
-
-        },
-        cancel: function () {
-            this.render();
         },
         initialize: function () {
             this.render();
@@ -281,34 +297,56 @@
         el: "#content",
         model: new Student(),
         template: _.template($("#edit-temp").html()),
-        initialize: function () {
-            this.render();
+        events: {
+            "click #update-btn": "update"
+        },
+
+        update: function (e) {
+            console.log("Updating student with roll no " + jQuery(e.currentTarget).val());
+            var stud = new Student({id: jQuery(e.currentTarget).val()});
+            stud.set("rollNo", $("#update-rollNo").val());
+            stud.set("firstName", $("#update-firstName").val());
+            stud.set("lastName", $("#update-lastName").val());
+            stud.set("className", $("#update-className").val());
+            stud.set("address", $("#update-address").val());
+            stud.set("city", $("#update-city").val());
+            stud.save(null, {
+                success: function (response) {
+                    alert(response.toJSON().message);
+                    systemRouter.navigate("", {trigger: true});
+
+                },
+                error: function (errorResponse) {
+                    console.log(errorResponse.toJSON());
+                }
+            });
 
         },
-        render: function () {
-            // var rollno = $("#rollNo").val();
-            // console.log(rollno);
-            // var anchor = document.querySelector('a'),
-            //     url = anchor.getAttribute('href');
-            // var text = anchor.getText('href');
-            // console.log(text);
-            // //var text = anchor.getText();
-            // console.log(url);
 
-            //alert(url);
-            this.$el.html(this.template());
+        render: function (options) {
+            var that = this;
+            console.log("edit view running..");
+            console.log("editing student with id " + options.id);
+            var student = new Student({id: options.id});
+            student.fetch({
+                success: function (response) {
+                    model = response.toJSON();
+                    console.log(model.data);
+                    that.$el.html(that.template(model.data))
 
+                }
+            });
         }
 
-
     });
+    var obj3 = new EditView();
 
     var SystemRouter = Backbone.Router.extend({
 
         routes: {
             "": "students",
             "addNew": "addNew",
-            "editView": "editView"
+            "editView/:id": "editView"
 
         },
 
@@ -321,16 +359,22 @@
             console.log("view 2");
             var obj2 = new AddNew();
         },
-        editView: function () {
-            console.log("edit form view");
-            var obj3 = new EditView();
+        // editView: function (id) {
+        //     console.log("edit form view");
+        //     var obj3 = new EditView();
+        //
+        // }
 
-        }
 
     });
 
     var systemRouter = new SystemRouter();
+    systemRouter.on('route:editView', function (id) {
+        obj3.render({id: id})
+
+    });
     Backbone.history.start();
+
 </script>
 
 </body>
