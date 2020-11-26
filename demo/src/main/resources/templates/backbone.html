@@ -52,17 +52,10 @@
                 <td contenteditable='false'><span class="city"><%= item.city %></span></td>
 
                 <td>
-                    <!--<button id="edit" class="btn btn-warning btn-sm mb-3" value="<%= item.rollNo%>,<%=item.firstName%>,<%=item.lastName%>,<%=item.className%>,<%=item.address%>,<%=item.city%> ">Edit</button>-->
-                    <!--<button id="edit" class="btn btn-warning btn-sm mb-3" value="<%= item.rollNo%>">Edit</button>-->
-                    <a href="#/editView/<%= item.rollNo %>" id="edit-link" value="<%= item.rollNo %>"
+                     <a href="#/editView/<%= item.rollNo %>" id="edit-link" value="<%= item.rollNo %>"
                        class="btn btn-warning btn-sm mb-3">Edit</a>
-                    <!--<button id="update" class="btn btn-warning btn-sm mb-3" value="<%= item.rollNo%>">Update</button>-->
                     <button id="delete" class="btn btn-danger btn-sm mb-3" value="<%= item.rollNo %>">Delete</button>
-                    <!--<button id="update" class="btn btn-success btn-sm mb-3" value="<%= item.rollNo %>"-->
-                    <!--style="display: none">Update-->
-                    <!--</button>-->
-                    <!--<button id="cancel" class="btn btn-danger btn-sm mb-3" style="display: none">Cancel</button>-->
-                </td>
+                    </td>
             </tr>
             <%}) %>
             </tbody>
@@ -124,7 +117,7 @@
 
 
                 <td>
-                    <button class="btn btn-primary" id="add-new">Submit</button>
+                    <button class="btn btn-success" id="add-new">Submit</button>
                 </td>
             </tr>
             </tbody>
@@ -138,7 +131,7 @@
 <script type="text/template" id="edit-temp">
     <div class="container">
         <h2>Student Updation Form</h2><br>
-        <a href="" class="btn btn-primary btn-sm mb-3">Cancel</a>
+        <a href="" class="btn btn-danger btn-sm mb-3">Cancel</a>
         <table class="table table-striped">
             <thead>
             <tr>
@@ -190,7 +183,7 @@
 
 
                 <td>
-                    <button class="btn btn-primary" id="update-btn" value="<%= rollNo%>">Update</button>
+                    <button class="btn btn-success" id="update-btn" value="<%= rollNo%>">Update</button>
                 </td>
             </tr>
             </tbody>
