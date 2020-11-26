@@ -25,7 +25,7 @@
 
     <div class="container">
         <h1> Student Details </h1>
-        <a href="#/addNew" class="btn btn-primary btn-sm mb-3">Add New Student</a>
+        <a href="#/add-student" class="btn btn-primary btn-sm mb-3">Add New Student</a>
 
         <table class="table table-striped" id="studentTable">
             <thead>
@@ -52,7 +52,7 @@
                 <td contenteditable='false'><span class="city"><%= item.city %></span></td>
 
                 <td>
-                     <a href="#/editView/<%= item.rollNo %>" id="edit-link" value="<%= item.rollNo %>"
+                     <a href="#/edit-student/<%= item.rollNo %>" id="edit-link" value="<%= item.rollNo %>"
                        class="btn btn-warning btn-sm mb-3">Edit</a>
                     <button id="delete" class="btn btn-danger btn-sm mb-3" value="<%= item.rollNo %>">Delete</button>
                     </td>
@@ -114,18 +114,13 @@
                         <input type="text" class="form-control" id="city" required>
                     </div>
                 </td>
-
-
                 <td>
                     <button class="btn btn-success" id="add-new">Submit</button>
                 </td>
             </tr>
             </tbody>
         </table>
-
-
     </div>
-
 </script>
 
 <script type="text/template" id="edit-temp">
@@ -338,8 +333,8 @@
 
         routes: {
             "": "students",
-            "addNew": "addNew",
-            "editView/:id": "editView"
+            "add-student": "addNew",
+            "edit-student/:id": "editView"
 
         },
 

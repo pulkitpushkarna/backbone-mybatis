@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class BackboneController {
 
-    @GetMapping("/getBackbone")
+    @GetMapping("/home")
     public String getBackbonePage(){
         return "backbone";
     }
