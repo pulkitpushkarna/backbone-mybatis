@@ -10,12 +10,18 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import javax.sql.DataSource;
 
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     UserDetailsService userDetailsService;
+    @Autowired
+    DataSource dataSource;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -38,20 +44,30 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/webjars/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
+                .rememberMe()
+                    .tokenRepository(persistentTokenRepository())
+                .and()
                 .formLogin()
-                .loginPage("/login")
-                .permitAll()
+                    .loginPage("/login")
+                    .permitAll()
                 .and()
                 .logout()
-                .invalidateHttpSession(true)
-                .clearAuthentication(true)
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/login?logout")
-                .permitAll();
+                    .invalidateHttpSession(true)
+                    .clearAuthentication(true)
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                    .logoutSuccessUrl("/login?logout")
+                    .permitAll();
     }
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
                 .antMatchers("/students/**");
+    }
+
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository(){
+        JdbcTokenRepositoryImpl jdbcTokenRepository = new JdbcTokenRepositoryImpl();
+        jdbcTokenRepository.setDataSource(dataSource);
+        return jdbcTokenRepository;
     }
 }
