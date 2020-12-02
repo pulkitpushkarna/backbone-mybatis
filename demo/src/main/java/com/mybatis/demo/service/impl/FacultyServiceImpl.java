@@ -22,7 +22,7 @@ public class FacultyServiceImpl implements FacultyService {
 
     @Override
     public ResponseDTO<List<FacultyResponseDTO>> getFacultyInformation(String facultyCode) {
-        ResponseDTO<List<FacultyResponseDTO>> responseDTO = new ResponseDTO(Boolean.FALSE, Constant.REQUEST_NO_PROCESSED);
+        ResponseDTO<List<FacultyResponseDTO>> responseDTO = new ResponseDTO(Boolean.FALSE, Constant.REQUEST_NOT_PROCESSED);
         List<FacultyResponseDTO> facultyInformation = facultyMapper.getFacultyInformation(facultyCode);
         List<FacultyResponseDTO> facultyResponseDTOList = new ArrayList<>();
         log.info("faculty code " + facultyCode);

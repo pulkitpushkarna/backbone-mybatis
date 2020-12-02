@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseDTO createUser(UserRequestDTO userRequestDTO) {
-        ResponseDTO responseDTO = new ResponseDTO(false, Constant.REQUEST_NO_PROCESSED);
+        ResponseDTO responseDTO = new ResponseDTO(false, Constant.REQUEST_NOT_PROCESSED);
 
         validateUserRequestDTO(responseDTO, userRequestDTO);
         if (!responseDTO.getStatus()) {
@@ -53,6 +53,7 @@ public class UserServiceImpl implements UserService {
 
     private void validateUserRequestDTO(ResponseDTO responseDTO, UserRequestDTO userRequestDTO) {
         log.info("validating user : " + userRequestDTO.getUserName());
+
         if (userRequestDTO.getUserName() == null
                 || userRequestDTO.getUserName().trim().equals("")) {
             responseDTO.setMessage("Username Cannot be Null");
@@ -70,10 +71,12 @@ public class UserServiceImpl implements UserService {
         } else if (!userRequestDTO.getPassword().equals(userRequestDTO.getConfirmPassword())) {
             responseDTO.setMessage("Confirm password didn't matched");
             log.error("Confirm password didn't matched");
+
         } else if (userRequestDTO.getRoles() == null
                 || userRequestDTO.getRoles().trim().equals("")) {
             responseDTO.setMessage("Role Cannot be null");
             log.error("Role cannot be null ");
+
         } else {
             responseDTO.setStatus(Boolean.TRUE);
         }
@@ -81,7 +84,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseDTO<UserResponseDTO> getUserByUserName(String userName) {
-        ResponseDTO responseDTO = new ResponseDTO(false, Constant.REQUEST_NO_PROCESSED);
+        ResponseDTO responseDTO = new ResponseDTO(false, Constant.REQUEST_NOT_PROCESSED);
         log.info("Getting user by user-name " + userName);
         User user = userMapper.findByUserName(userName);
         if (user != null) {
@@ -90,7 +93,7 @@ public class UserServiceImpl implements UserService {
             responseDTO.setMessage(Constant.REQUEST_SUCCESS);
             responseDTO.setData(user);
         } else {
-            log.info("User not found;");
+            log.info("User not found ");
             responseDTO.setStatus(Boolean.FALSE);
             responseDTO.setMessage(Constant.NO_DATA_FOUND);
         }

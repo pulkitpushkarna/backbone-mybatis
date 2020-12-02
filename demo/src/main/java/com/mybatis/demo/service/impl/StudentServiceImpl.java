@@ -27,7 +27,7 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public ResponseDTO<List<StudentResponseDTO>> getAllStudents() {
         ResponseDTO<List<StudentResponseDTO>> responseDTO =
-                new ResponseDTO(false, Constant.REQUEST_NO_PROCESSED);
+                new ResponseDTO(false, Constant.REQUEST_NOT_PROCESSED);
         List<StudentResponseDTO> studentResponseDTOList = new ArrayList<>();
         List<Student> studentList = studentMapper.getAllStudents();
         if (!studentList.isEmpty()) {
@@ -51,7 +51,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public ResponseDTO createStudent(StudentRequestDTO studentRequestDto) {
-        ResponseDTO responseDTO = new ResponseDTO(false, Constant.REQUEST_NO_PROCESSED);
+        ResponseDTO responseDTO = new ResponseDTO(false, Constant.REQUEST_NOT_PROCESSED);
         validateStudentRequestDto(studentRequestDto, responseDTO);
         if (!responseDTO.getStatus()) {
             return responseDTO;
@@ -119,7 +119,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public ResponseDTO updateStudent(StudentRequestDTO studentRequestDto, String rollNo) {
-        ResponseDTO responseDTO = new ResponseDTO(false, Constant.REQUEST_NO_PROCESSED);
+        ResponseDTO responseDTO = new ResponseDTO(false, Constant.REQUEST_NOT_PROCESSED);
         validateStudentRequestDto(studentRequestDto, responseDTO);
         log.info("updating student with roll no " + rollNo);
         if (!responseDTO.getStatus()) {
@@ -149,7 +149,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public ResponseDTO getStudentByRollNo(String rollNo) {
-        ResponseDTO responseDTO = new ResponseDTO(false, Constant.REQUEST_NO_PROCESSED);
+        ResponseDTO responseDTO = new ResponseDTO(false, Constant.REQUEST_NOT_PROCESSED);
         log.info("Get Student by roll no " + rollNo);
         Student studentByRollNo = studentMapper.getStudentByRollNo(rollNo);
         if (studentByRollNo != null) {
@@ -167,7 +167,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public ResponseDTO deleteStudent(String rollNo) {
-        ResponseDTO responseDTO = new ResponseDTO(false, Constant.REQUEST_NO_PROCESSED);
+        ResponseDTO responseDTO = new ResponseDTO(false, Constant.REQUEST_NOT_PROCESSED);
         Student studentByRollNo = studentMapper.getStudentByRollNo(rollNo);
         if (studentByRollNo == null) {
             responseDTO.setStatus(Boolean.FALSE);
@@ -185,7 +185,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public ResponseDTO getStudentCountByClass(String className) {
-        ResponseDTO responseDTO = new ResponseDTO(false, Constant.REQUEST_NO_PROCESSED);
+        ResponseDTO responseDTO = new ResponseDTO(false, Constant.REQUEST_NOT_PROCESSED);
         Integer studentCountByClass = studentMapper.getStudentCountByClass(className);
         if (studentCountByClass != 0) {
             log.info("Student count of " + className + " is " + studentCountByClass);
@@ -202,7 +202,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public ResponseDTO<List<StudentResponseDTO>> getFilteredStudent(SearchDTO searchDTO) {
-        ResponseDTO<List<StudentResponseDTO>> responseDTO = new ResponseDTO(false, Constant.REQUEST_NO_PROCESSED);
+        ResponseDTO<List<StudentResponseDTO>> responseDTO = new ResponseDTO(false, Constant.REQUEST_NOT_PROCESSED);
         log.info("SearchDTO " + searchDTO);
         List<Student> filteredStudent = studentMapper.getFilteredStudent(searchDTO);
         List<StudentResponseDTO> studentResponseDTOList = new ArrayList<>();
@@ -228,7 +228,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public ResponseDTO<List<StudentResponseDTO>> getListOfStudent(List<String> rollNoList) {
-        ResponseDTO<List<StudentResponseDTO>> responseDTO = new ResponseDTO(false, Constant.REQUEST_NO_PROCESSED);
+        ResponseDTO<List<StudentResponseDTO>> responseDTO = new ResponseDTO(false, Constant.REQUEST_NOT_PROCESSED);
         if (!rollNoList.isEmpty()) {
             log.info("roll no list {} " + rollNoList);
             List<Student> studentList = studentMapper.getListOfStudent(rollNoList);
