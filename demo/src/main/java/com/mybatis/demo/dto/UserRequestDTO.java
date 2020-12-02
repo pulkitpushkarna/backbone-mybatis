@@ -1,21 +1,10 @@
-package com.mybatis.demo.entity;
+package com.mybatis.demo.dto;
 
-public class User {
-
-    private Integer id;
+public class UserRequestDTO {
     private String userName;
     private String password;
     private String confirmPassword;
-    private Boolean active;
     private String roles;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getUserName() {
         return userName;
@@ -39,14 +28,6 @@ public class User {
 
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
     }
 
     public String getRoles() {

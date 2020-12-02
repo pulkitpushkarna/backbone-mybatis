@@ -11,11 +11,6 @@ public class BackboneController {
         return "index";
     }
 
-//    @GetMapping("/home")
-//    public String getBackbonePage(){
-//        return "backbone";
-//    }
-
     @GetMapping("/login")
     public String login(){
         return "login";

@@ -11,8 +11,13 @@
     </resultMap>
 
     <select id="findByUserName" resultMap="userResultMap" parameterType="String">
-        select * from user where user_name = #{userName}
+        select * from user where user_name = #{userName} and active = 1
 
     </select>
+
+    <insert id="save" parameterType="User">
+        insert into user (user_name, password,confirm_password,roles, active)
+        values (#{userName}, #{password}, #{confirmPassword}, #{roles}, #{active})
+    </insert>
 
 </mapper>

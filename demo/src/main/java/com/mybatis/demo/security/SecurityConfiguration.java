@@ -42,8 +42,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         "/css/**",
                         "/img/**",
                         "/webjars/**").permitAll()
-                .anyRequest().authenticated()
-                .and()
+                .antMatchers("/").hasAnyRole("ADMIN","USER")
+                .antMatchers("/students/**").hasAnyRole("ADMIN")
+                .antMatchers("/students/{rollNo}").hasAnyRole("ADMIN")
+                //.antMatchers("#/edit-student/**").hasRole("ADMIN")
+                //.anyRequest().authenticated()
+                 .and()
                 .rememberMe()
                     .tokenRepository(persistentTokenRepository())
                 .and()
@@ -61,7 +65,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
-                .antMatchers("/students/**");
+                .antMatchers("/students/**")
+                .antMatchers("/users/**");
     }
 
     @Bean

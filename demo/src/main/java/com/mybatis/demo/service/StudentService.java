@@ -4,9 +4,10 @@ import com.mybatis.demo.dto.ResponseDTO;
 import com.mybatis.demo.dto.SearchDTO;
 import com.mybatis.demo.dto.StudentRequestDTO;
 import com.mybatis.demo.dto.StudentResponseDTO;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service
 public interface StudentService {
 
     ResponseDTO<List<StudentResponseDTO>> getAllStudents();

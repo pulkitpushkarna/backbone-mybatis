@@ -24,8 +24,9 @@
 
     <div class="container">
         <h1> Student Details </h1>
-        <h3 align="right"> <a href="/logout" class="btn btn-danger">Logout</a></h3>
-        <a href="#/add-student" class="btn btn-primary btn-sm mb-3">Add New Student</a>
+        <h3 align="right"><a href="/logout" class="btn btn-danger">Logout</a></h3>
+        <h3><a href="#/add-user" class="btn btn-success">Add New User</a></h3>
+        <a href="#/add-student" class="btn btn-primary">Add New Student</a>
 
         <table class="table table-striped" id="studentTable">
             <thead>
@@ -45,11 +46,11 @@
             <tr>
                 <th scope="row"><%= item.id %></th>
                 <td><span class="rollNo"><%= item.rollNo %></span></td>
-                <td contenteditable='false'><span class="firstName"><%= item.firstName %></span></td>
-                <td contenteditable='false'><span class="lastName"><%= item.lastName %></span></td>
-                <td contenteditable='false'><span class="className"><%= item.className %></span></td>
-                <td contenteditable='false'><span class="address"><%= item.address %></span></td>
-                <td contenteditable='false'><span class="city"><%= item.city %></span></td>
+                <td><span class="firstName"><%= item.firstName %></span></td>
+                <td><span class="lastName"><%= item.lastName %></span></td>
+                <td><span class="className"><%= item.className %></span></td>
+                <td><span class="address"><%= item.address %></span></td>
+                <td><span class="city"><%= item.city %></span></td>
 
                 <td>
                     <a href="#/edit-student/<%= item.rollNo %>" id="edit-link" value="<%= item.rollNo %>"
@@ -188,11 +189,66 @@
     </div>
 </script>
 
+<script type="text/template" id="add-user-temp">
+    <div class="container">
+        <h2>User Creation Form</h2><br>
+        <a href="" class="btn btn-primary btn-sm mb-3">Go Back</a>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Username</th>
+                <th scope="col">Password</th>
+                <th scope="col">Confirm Password</th>
+                <th scope="col">Role</th>
+                <th scope="col">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="user-name" required>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="password" required>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="confirm-password" required>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <select name="className" id="roles" class="form-control">
+                            <option value="ROLE_ADMIN">ADMIN</option>
+                            <option value="ROLE_USER">USER</option>
+                        </select>
+                    </div>
+                </td>
+                <td>
+                    <div>
+
+                        <button class="btn btn-success" id="add-new-user">Submit</button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</script>
+
 <script type="text/javascript">
 
 
     var Student = Backbone.Model.extend({
         urlRoot: "/students/"
+    });
+
+    var User = Backbone.Model.extend({
+        urlRoot: "/users/"
     });
     var FirstView = Backbone.View.extend({
         el: "#content",
@@ -329,12 +385,58 @@
     });
     var obj3 = new EditView();
 
+    var AddUser = Backbone.View.extend({
+        el: "#content",
+        model: new User(),
+        template: _.template($("#add-user-temp").html()),
+        events: {
+            "click #add-new-user": "addNewUser"
+
+        },
+        addNewUser: function () {
+            var user = new User({
+                userName: $("#user-name").val(),
+                password: $("#password").val(),
+                confirmPassword: $("#confirm-password").val(),
+                roles: $("#roles").val()
+
+            });
+            user.save(null,{
+                success:function(response){
+                    console.log(response.toJSON());
+
+
+                    if(response.toJSON().status){
+                        $("#user-name").val("");
+                        $("#password").val("");
+                        $("#confirm-password").val("");
+                    }
+                    alert(response.toJSON().message);
+                }
+            });
+
+    },
+    initialize:function () {
+        this.render();
+
+    }
+    ,
+    render:function () {
+        this.$el.html(this.template());
+
+
+    }
+
+    })
+    ;
+
     var SystemRouter = Backbone.Router.extend({
 
         routes: {
             "": "students",
             "add-student": "addNew",
-            "edit-student/:id": "editView"
+            "edit-student/:id": "editView",
+            "add-user": "addUser"
 
         },
 
@@ -347,11 +449,11 @@
             console.log("view 2");
             var obj2 = new AddNew();
         },
-        // editView: function (id) {
-        //     console.log("edit form view");
-        //     var obj3 = new EditView();
-        //
-        // }
+        addUser: function () {
+            console.log("adduser view");
+            var addUser = new AddUser();
+
+        }
 
 
     });

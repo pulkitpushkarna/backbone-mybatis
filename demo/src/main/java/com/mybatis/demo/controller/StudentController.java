@@ -9,6 +9,7 @@ import com.mybatis.demo.repository.UserMapper;
 import com.mybatis.demo.service.StudentService;
 import jdk.nashorn.internal.objects.annotations.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 

@@ -14,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/faculty")
 public class FacultyController {
+
     @Autowired
     FacultyService facultyService;
 
