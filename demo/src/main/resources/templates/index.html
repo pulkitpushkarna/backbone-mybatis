@@ -24,9 +24,12 @@
 
     <div class="container">
         <h1> Student Details </h1>
-        <h3 align="right"><a href="/logout" class="btn btn-danger">Logout</a></h3>
+        <h3 align="right"><a href="/logout" class="btn btn-danger">Logout : <%=loginedUser%> </a></h3>
+        <% if(userRole=="ROLE_ADMIN"){ %>
         <h3><a href="#/add-user" class="btn btn-success">Add New User</a></h3>
         <a href="#/add-student" class="btn btn-primary">Add New Student</a>
+
+        <% } %>
 
         <table class="table table-striped" id="studentTable">
             <thead>
@@ -52,11 +55,15 @@
                 <td><span class="address"><%= item.address %></span></td>
                 <td><span class="city"><%= item.city %></span></td>
 
+                <% if(userRole=="ROLE_ADMIN"){ %>
+
                 <td>
                     <a href="#/edit-student/<%= item.rollNo %>" id="edit-link" value="<%= item.rollNo %>"
                        class="btn btn-warning btn-sm mb-3">Edit</a>
                     <button id="delete" class="btn btn-danger btn-sm mb-3" value="<%= item.rollNo %>">Delete</button>
                 </td>
+
+                <% } %>
             </tr>
             <%}) %>
             </tbody>
@@ -260,7 +267,7 @@
         delete: function (e) {
             console.log(jQuery(e.currentTarget).val());
             var stud = new Student({id: jQuery(e.currentTarget).val()});
-            console.log("deleting sttudent with roll no " + jQuery(e.currentTarget).val());
+            console.log("deleting student with roll no " + jQuery(e.currentTarget).val());
             stud.destroy({
                 success: function (model, response) {
                     alert(response.message);
@@ -322,9 +329,6 @@
                     console.log(response.toJSON().message);
                     alert(response.toJSON().message)
                 },
-                error: function (errorResponse) {
-                    alert(errorResponse.toJSON());
-                }
             });
         },
         initialize: function () {

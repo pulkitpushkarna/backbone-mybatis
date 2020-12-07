@@ -1,5 +1,7 @@
 package com.mybatis.demo.dto;
 
+import com.mybatis.demo.entity.User;
+
 import java.io.Serializable;
 
 
@@ -10,6 +12,10 @@ public class ResponseDTO<T> implements Serializable {
     private String code;
 
     private String message;
+
+    private String loginedUser;
+
+    private String userRole;
 
     private T data;
 
@@ -49,5 +55,21 @@ public class ResponseDTO<T> implements Serializable {
 
     public void setData(T data) {
         this.data = data;
+    }
+
+    public String getLoginedUser() {
+        return loginedUser;
+    }
+
+    public void setLoginedUser(String loginedUser) {
+        this.loginedUser = loginedUser;
+    }
+
+    public String getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(String userRole) {
+        this.userRole = userRole;
     }
 }

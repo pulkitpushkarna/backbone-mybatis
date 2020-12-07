@@ -5,11 +5,14 @@ import com.mybatis.demo.dto.UserRequestDTO;
 import com.mybatis.demo.dto.UserResponseDTO;
 import com.mybatis.demo.entity.User;
 import com.mybatis.demo.repository.UserMapper;
+import com.mybatis.demo.security.AppUser;
 import com.mybatis.demo.service.UserService;
 import com.mybatis.demo.util.Constant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,7 +32,7 @@ public class UserServiceImpl implements UserService {
             return responseDTO;
         }
         User checkuser = userMapper.findByUserName(userRequestDTO.getUserName());
-        if (checkuser != null || checkuser.getUserName().equals(userRequestDTO.getUserName())) {
+        if (checkuser != null) {
             responseDTO.setCode(Constant.BAD_REQUEST);
             responseDTO.setStatus(Boolean.FALSE);
             responseDTO.setMessage("User already present");
@@ -100,5 +103,12 @@ public class UserServiceImpl implements UserService {
         return responseDTO;
 
 
+    }
+
+    public User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        AppUser userDetail = (AppUser) authentication.getPrincipal();
+        String username = userDetail.getUsername();
+        return userMapper.findByUserName(username);
     }
 }

@@ -2,6 +2,7 @@ package com.mybatis.demo.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -28,8 +29,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsService);
 
     }
+
     @Bean
-    public PasswordEncoder getPasswordEncoder(){
+    public PasswordEncoder getPasswordEncoder() {
         return NoOpPasswordEncoder.getInstance();
     }
 
@@ -37,40 +39,40 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers(
-                        "/js/**",
-                        "/css/**",
-                        "/img/**",
-                        "/webjars/**").permitAll()
                 .antMatchers("/").hasAnyRole("ADMIN","USER")
+                .antMatchers(HttpMethod.GET,"/students/").hasAnyRole("ADMIN","USER")
+                .antMatchers("/users/**").hasAnyRole("ADMIN")
                 .antMatchers("/students/**").hasAnyRole("ADMIN")
-                .antMatchers("/students/{rollNo}").hasAnyRole("ADMIN")
                 //.antMatchers("#/edit-student/**").hasRole("ADMIN")
-                //.anyRequest().authenticated()
-                 .and()
+                .anyRequest().authenticated()
+                .and()
                 .rememberMe()
-                    .tokenRepository(persistentTokenRepository())
+                .tokenRepository(persistentTokenRepository())
                 .and()
                 .formLogin()
-                    .loginPage("/login")
-                    .permitAll()
+                .loginPage("/login")
+                .permitAll()
                 .and()
                 .logout()
-                    .invalidateHttpSession(true)
-                    .clearAuthentication(true)
-                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                    .logoutSuccessUrl("/login?logout")
-                    .permitAll();
-    }
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring()
-                .antMatchers("/students/**")
-                .antMatchers("/users/**");
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                .logoutSuccessUrl("/login?logout")
+                .permitAll()
+                .and()
+                .csrf().disable()
+                .httpBasic();
     }
 
+//    @Override
+//    public void configure(WebSecurity web) throws Exception {
+//        web.ignoring()
+//                .antMatchers("/students/**")
+//                .antMatchers("/users/**");
+//    }
+
     @Bean
-    public PersistentTokenRepository persistentTokenRepository(){
+    public PersistentTokenRepository persistentTokenRepository() {
         JdbcTokenRepositoryImpl jdbcTokenRepository = new JdbcTokenRepositoryImpl();
         jdbcTokenRepository.setDataSource(dataSource);
         return jdbcTokenRepository;

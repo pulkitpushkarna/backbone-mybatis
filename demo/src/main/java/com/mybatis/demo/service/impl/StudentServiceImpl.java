@@ -5,6 +5,7 @@ import com.mybatis.demo.dto.SearchDTO;
 import com.mybatis.demo.dto.StudentRequestDTO;
 import com.mybatis.demo.dto.StudentResponseDTO;
 import com.mybatis.demo.entity.Student;
+import com.mybatis.demo.entity.User;
 import com.mybatis.demo.repository.StudentMapper;
 import com.mybatis.demo.service.StudentService;
 import com.mybatis.demo.util.Constant;
@@ -21,6 +22,8 @@ public class StudentServiceImpl implements StudentService {
 
     @Autowired
     StudentMapper studentMapper;
+    @Autowired
+    UserServiceImpl userService;
 
     private static final Logger log = LoggerFactory.getLogger(StudentServiceImpl.class);
 
@@ -41,6 +44,8 @@ public class StudentServiceImpl implements StudentService {
             responseDTO.setStatus(true);
             responseDTO.setMessage(Constant.REQUEST_SUCCESS);
             responseDTO.setData(studentResponseDTOList);
+            responseDTO.setLoginedUser(userService.getCurrentUser().getUserName());
+            responseDTO.setUserRole(userService.getCurrentUser().getRoles());
         } else {
             responseDTO.setCode(Constant.BAD_REQUEST);
             responseDTO.setStatus(Boolean.FALSE);
