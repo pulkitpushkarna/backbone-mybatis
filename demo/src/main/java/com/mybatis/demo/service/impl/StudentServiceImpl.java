@@ -62,7 +62,7 @@ public class StudentServiceImpl implements StudentService {
             return responseDTO;
         }
         Student studentByRollNo = studentMapper.getStudentByRollNo(studentRequestDto.getRollNo());
-        if (studentByRollNo != null && studentByRollNo.getRollNo().equals(studentRequestDto.getRollNo())) {
+        if (studentByRollNo != null) {
             log.error("Student alreaady exist");
             responseDTO.setStatus(Boolean.FALSE);
             responseDTO.setCode(Constant.OK);
