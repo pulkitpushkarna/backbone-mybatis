@@ -62,6 +62,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .httpBasic();
     }
 
+//    @Override
+//    public void configure(WebSecurity web) throws Exception {
+//        web.ignoring()
+//                .antMatchers("/students/**")
+//                .antMatchers("/users/**");
+//    }
 
     @Bean
     public PersistentTokenRepository persistentTokenRepository() {
