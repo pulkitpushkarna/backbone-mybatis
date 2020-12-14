@@ -7,7 +7,6 @@ import com.mybatis.demo.dto.StudentResponseDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-@Service
 public interface StudentService {
 
     ResponseDTO<List<StudentResponseDTO>> getAllStudents();

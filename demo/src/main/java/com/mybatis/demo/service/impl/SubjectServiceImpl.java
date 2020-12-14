@@ -16,11 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class SubjectServiceImp implements SubjectService {
+public class SubjectServiceImpl implements SubjectService {
     @Autowired
     SubjectRepository subjectRepository;
 
-    private static final Logger log = LoggerFactory.getLogger(SubjectServiceImp.class);
+    private static final Logger log = LoggerFactory.getLogger(SubjectServiceImpl.class);
 
     @Override
     public ResponseDTO addSubject(SubjectRequestDTO subjectRequestDTO) {
