@@ -82,11 +82,11 @@ public class SubjectServiceImpl implements SubjectService {
             responseDTO.setMessage("Subject Name Cannot be nul ");
             log.info("Subject name is nul");
         } else if (subjectRequestDTO.getScore() == null) {
-            responseDTO.setMessage("Subject credit cannot be null");
-            log.info("Suject credi is null");
-        } else if (subjectRequestDTO.getSubjectCode() == null || subjectRequestDTO.getSubjectCode().trim().equals("")) {
             responseDTO.setMessage("Subject score cannot be null");
-            log.info("Subject score cannot be null");
+            log.info("Suject score is null");
+        } else if (subjectRequestDTO.getSubjectCode() == null || subjectRequestDTO.getSubjectCode().trim().equals("")) {
+            responseDTO.setMessage("Subject code cannot be null");
+            log.info("Subject code cannot be null");
         } else {
             responseDTO.setStatus(Boolean.TRUE);
         }
