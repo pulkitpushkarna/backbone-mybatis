@@ -4,7 +4,7 @@ public class SubjectRequestDTO {
 
     private String name;
     private Integer score;
-    private String code;
+    private String subjectCode;
 
     public String getName() {
         return name;
@@ -22,11 +22,11 @@ public class SubjectRequestDTO {
         this.score = score;
     }
 
-    public String getCode() {
-        return code;
+    public String getSubjectCode() {
+        return subjectCode;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setSubjectCode(String subjectCode) {
+        this.subjectCode = subjectCode;
     }
 }

@@ -10,7 +10,6 @@ import com.mybatis.demo.util.Constant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,22 +30,23 @@ public class SubjectServiceImpl implements SubjectService {
         if(!responseDTO.getStatus()){
             return responseDTO;
         }
-        Subject byCode = subjectRepository.findBySubjectCode(subjectRequestDTO.getCode());
+        Subject byCode = subjectRepository.findBySubjectCode(subjectRequestDTO.getSubjectCode());
         if(byCode!=null){
             log.error("Subject with code alreaady exist");
             responseDTO.setStatus(Boolean.FALSE);
             responseDTO.setCode(Constant.OK);
-            responseDTO.setMessage("Subject with " + subjectRequestDTO.getCode() + " already exist");
+            responseDTO.setMessage("Subject with " + subjectRequestDTO.getSubjectCode() + " already exist");
             responseDTO.setData(byCode);
         }else {
             Subject subject = new Subject();
             subject.setName(subjectRequestDTO.getName());
-            subject.setSubjectCode(subjectRequestDTO.getCode());
+            subject.setSubjectCode(subjectRequestDTO.getSubjectCode());
             subject.setScore(subjectRequestDTO.getScore());
-            subjectRepository.save(subject);
+            subjectRepository.insert(subject);
             responseDTO.setCode(Constant.OK);
             responseDTO.setStatus(Boolean.TRUE);
             responseDTO.setMessage(Constant.REQUEST_SUCCESS);
+            responseDTO.setData(subject);
         }
         return responseDTO;
     }
@@ -69,6 +69,9 @@ public class SubjectServiceImpl implements SubjectService {
             responseDTO.setStatus(Boolean.TRUE);
             responseDTO.setMessage(Constant.REQUEST_SUCCESS);
             responseDTO.setData(subjectResponseDTOList);
+        }else {
+            responseDTO.setCode(Constant.BAD_REQUEST);
+            responseDTO.setMessage(Constant.NO_DATA_FOUND);
         }
         return responseDTO;
     }
@@ -81,7 +84,7 @@ public class SubjectServiceImpl implements SubjectService {
         } else if (subjectRequestDTO.getScore() == null) {
             responseDTO.setMessage("Subject credit cannot be null");
             log.info("Suject credi is null");
-        } else if (subjectRequestDTO.getCode() == null || subjectRequestDTO.getCode().trim().equals("")) {
+        } else if (subjectRequestDTO.getSubjectCode() == null || subjectRequestDTO.getSubjectCode().trim().equals("")) {
             responseDTO.setMessage("Subject score cannot be null");
             log.info("Subject score cannot be null");
         } else {
