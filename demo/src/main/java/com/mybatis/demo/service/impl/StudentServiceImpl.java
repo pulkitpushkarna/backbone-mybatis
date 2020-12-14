@@ -41,7 +41,7 @@ public class StudentServiceImpl implements StudentService {
         }
         if (!studentResponseDTOList.isEmpty()) {
             responseDTO.setCode(Constant.OK);
-            responseDTO.setStatus(true);
+            responseDTO.setStatus(Boolean.TRUE);
             responseDTO.setMessage(Constant.REQUEST_SUCCESS);
             responseDTO.setData(studentResponseDTOList);
             responseDTO.setLoginedUser(userService.getCurrentUser().getUserName());

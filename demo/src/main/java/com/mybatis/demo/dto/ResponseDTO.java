@@ -1,5 +1,6 @@
 package com.mybatis.demo.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mybatis.demo.entity.User;
 
 import java.io.Serializable;
@@ -13,8 +14,10 @@ public class ResponseDTO<T> implements Serializable {
 
     private String message;
 
+    @JsonIgnore
     private String loginedUser;
 
+    @JsonIgnore
     private String userRole;
 
     private T data;
