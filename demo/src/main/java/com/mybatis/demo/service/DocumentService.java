@@ -49,32 +49,10 @@ public class DocumentService {
         return documentRepository.findByStandard(standard);
     }
 
-    public List<StudenttDTO> aggregationExample(String standard) {
-        Aggregation aggregation = Aggregation.newAggregation(
-                Aggregation.match(Criteria.where("standard.name").is(standard)),
-                Aggregation.unwind("subjects"),
-                Aggregation.group("subjects.name").sum("subjects.score").as("total"),
-                Aggregation.match(Criteria.where("_id").is("Maths")),
-                Aggregation.project()
-                        .and("_id").as("name")
-                        .and("total").as("total")
-
-        );
-
-        List<StudenttDTO> students = mongoTemplate.aggregate(aggregation, "student", StudenttDTO.class).getMappedResults();
-
-        return students.stream().map(e -> {
-            StudenttDTO studenttDTO = new StudenttDTO();
-            studenttDTO.setName(e.getName());
-            studenttDTO.setTotal(e.getTotal());
-            return studenttDTO;
-        }).collect(Collectors.toList());
-    }
-
     public ResponseDTO<List<AverageDTO>> getAverageMarks(FilterDTO filterDTO) {
         ResponseDTO<List<AverageDTO>> responseDTO = new ResponseDTO<>(Boolean.FALSE, Constant.REQUEST_NOT_PROCESSED);
-        log.info("FilterDTO "+filterDTO.toString());
-        if (filterDTO.getStandardName() != null && filterDTO.getSubjectName() != null) {
+        log.info("FilterDTO " + filterDTO.toString());
+        if (filterDTO.getStandardName() != null && filterDTO.getSubjectName() != null && !filterDTO.getSubjectName().trim().equals("") && !filterDTO.getStandardName().trim().equals("")) {
             Aggregation aggregation = Aggregation.newAggregation(
                     Aggregation.match(Criteria.where("standard.name").is(filterDTO.getStandardName())),
                     Aggregation.unwind("subjects"),
@@ -86,16 +64,16 @@ public class DocumentService {
 
             );
             List<AverageDTO> averageDTOList = mongoTemplate.aggregate(aggregation, "student", AverageDTO.class).getMappedResults();
-            if (!averageDTOList.isEmpty()){
+            if (!averageDTOList.isEmpty()) {
                 responseDTO.setStatus(Boolean.TRUE);
                 responseDTO.setCode(Constant.OK);
                 responseDTO.setMessage(Constant.REQUEST_SUCCESS);
                 responseDTO.setData(averageDTOList);
-            }else {
+            } else {
                 responseDTO.setCode(Constant.BAD_REQUEST);
                 responseDTO.setMessage("No Data found");
             }
-        }else {
+        } else {
             responseDTO.setCode(Constant.BAD_REQUEST);
             responseDTO.setMessage("Subject name or standard name cannot be null ");
         }
