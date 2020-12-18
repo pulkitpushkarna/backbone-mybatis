@@ -1,11 +1,9 @@
 package com.mybatis.demo.repository;
 
-import com.mybatis.demo.document.Subject;
+import com.mybatis.demo.document.Student;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface SubjectRepository extends MongoRepository<Subject,String> {
-
-    Subject findByCode(String code);
+public interface StudentRepository extends MongoRepository<Student,String> {
 }

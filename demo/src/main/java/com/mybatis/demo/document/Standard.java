@@ -4,12 +4,11 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-public class Subject {
+public class Standard {
     @Id
     private String id;
     private String name;
-    private String code;
-    private Integer score;
+    private String roomNo;
 
     public String getName() {
         return name;
@@ -19,19 +18,11 @@ public class Subject {
         this.name = name;
     }
 
-    public String getCode() {
-        return code;
+    public String getRoomNo() {
+        return roomNo;
     }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public Integer getScore() {
-        return score;
-    }
-
-    public void setScore(Integer score) {
-        this.score = score;
+    public void setRoomNo(String roomNo) {
+        this.roomNo = roomNo;
     }
 }

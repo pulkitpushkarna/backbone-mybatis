@@ -111,7 +111,7 @@ public class StudentServiceImpl implements StudentService {
             log.error("address cannot be null ");
         } else if (studentRequestDto.getClassName() == null
                 || studentRequestDto.getClassName().trim().equals("")) {
-            responseDTO.setMessage("Class Name cannot be null");
+            responseDTO.setMessage("Standard Name cannot be null");
             log.error("class name cannot be null");
         } else if (studentRequestDto.getCity() == null
                 || studentRequestDto.getCity().trim().equals("")) {

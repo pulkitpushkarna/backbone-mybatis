@@ -30,7 +30,7 @@ public class SubjectServiceImpl implements SubjectService {
         if(!responseDTO.getStatus()){
             return responseDTO;
         }
-        Subject byCode = subjectRepository.findBySubjectCode(subjectRequestDTO.getSubjectCode());
+        Subject byCode = subjectRepository.findByCode(subjectRequestDTO.getSubjectCode());
         if(byCode!=null){
             log.error("Subject with code alreaady exist");
             responseDTO.setStatus(Boolean.FALSE);
@@ -40,7 +40,7 @@ public class SubjectServiceImpl implements SubjectService {
         }else {
             Subject subject = new Subject();
             subject.setName(subjectRequestDTO.getName());
-            subject.setSubjectCode(subjectRequestDTO.getSubjectCode());
+            subject.setCode(subjectRequestDTO.getSubjectCode());
             subject.setScore(subjectRequestDTO.getScore());
             subjectRepository.insert(subject);
             responseDTO.setCode(Constant.OK);
@@ -59,8 +59,8 @@ public class SubjectServiceImpl implements SubjectService {
         if(!subjects.isEmpty()){
             for (Subject subject:subjects){
                 SubjectResponseDTO subjectResponseDTO = new SubjectResponseDTO();
-                subjectResponseDTO.setId(subject.getId());
-                subjectResponseDTO.setSubjectCode(subject.getSubjectCode());
+               // subjectResponseDTO.setId(subject.getId());
+                subjectResponseDTO.setSubjectCode(subject.getCode());
                 subjectResponseDTO.setSubjectName(subject.getName());
                 subjectResponseDTO.setScore(subject.getScore());
                 subjectResponseDTOList.add(subjectResponseDTO);
@@ -79,8 +79,8 @@ public class SubjectServiceImpl implements SubjectService {
     private void validateSubjectRequestDTO(ResponseDTO responseDTO, SubjectRequestDTO subjectRequestDTO) {
         log.info("validating subject " + subjectRequestDTO.getName());
         if (subjectRequestDTO.getName() == null || subjectRequestDTO.getName().trim().equals("")) {
-            responseDTO.setMessage("Subject Name Cannot be nul ");
-            log.info("Subject name is nul");
+            responseDTO.setMessage("Subject Name Cannot be null ");
+            log.info("Subject name is null");
         } else if (subjectRequestDTO.getScore() == null) {
             responseDTO.setMessage("Subject score cannot be null");
             log.info("Suject score is null");

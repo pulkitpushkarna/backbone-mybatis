@@ -14,10 +14,10 @@ public class ResponseDTO<T> implements Serializable {
 
     private String message;
 
-    @JsonIgnore
+    //@JsonIgnore
     private String loginedUser;
 
-    @JsonIgnore
+   // @JsonIgnore
     private String userRole;
 
     private T data;
