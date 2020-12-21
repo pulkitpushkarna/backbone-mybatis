@@ -251,7 +251,9 @@
 <script type="text/template" id="filter">
     <div class="container">
         <h2>Get Average Marks</h2><br>
-        <a href="" class="btn btn-primary btn-sm mb-3">Go Back</a>
+        <a href="" class="btn btn-danger btn-sm mb-3">Go Back</a>
+        <a href="#/add-subject" class="btn btn-primary btn-sm mb-3">Add Subjects</a>
+        <a href="" class="btn btn-primary btn-sm mb-3">Add Student</a>
         <table class="table table-striped">
             <thead>
             <tr>
@@ -263,7 +265,7 @@
             <tr>
                 <td>
                     <div class="form-group">
-                        <select name="className" id="standar-name" class="form-control">
+                        <select name="className" id="standard-name" class="form-control">
                             <% _.each(data ,function(standard){%>
                             <option value="<%=standard.name%>"><%=standard.name%> <%=standard.roomNo%></option>
                             <%})%>
@@ -289,6 +291,44 @@
         </table>
     </div>
 </script>
+<script type="text/template" id="subject-temp">
+    <div class="container">
+        <h2>Add Subject</h2><br>
+        <a href="" class="btn btn-danger btn-sm mb-3">Go Back</a>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Enter Subject Name</th>
+                <th scope="col">Enter Subject code</th>
+                <th scope="col">Total marks</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="sub-name" required>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="sub-code" required>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="sub-score" required>
+                    </div>
+                </td>
+                <td>
+                    <button class="btn btn-success" id="add-subjecct">Save</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</script>
+
 
 <script type="text/javascript">
 
@@ -533,6 +573,25 @@
 
     });
 
+    var SubjectView = Backbone.View.extend({
+        el: "#content",
+        template: _.template($("#subject-temp").html()),
+        events: {
+            "click #add-subject": "addSubject"
+
+        },
+        addSubject:function(){
+
+        },
+        initialize :function () {
+            this.render();
+        },
+        render:function () {
+            this.$el.html(this.template());
+        }
+
+    });
+
 
     var SystemRouter = Backbone.Router.extend({
 
@@ -541,7 +600,8 @@
             "add-student": "addNew",
             "edit-student/:id": "editView",
             "add-user": "addUser",
-            "filter": "filterView"
+            "filter": "filterView",
+            "add-subject":"addSubject"
 
         },
 
@@ -562,6 +622,11 @@
         filterView: function () {
             console.log("Filter view");
             var documentView = new DocumentView();
+
+        },
+        addSubject:function () {
+            console.log("add subject view");
+            var subjectView = new SubjectView();
 
         }
 
