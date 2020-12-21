@@ -9,4 +9,7 @@ import java.util.List;
 public interface DocumentRepository extends MongoRepository<Student,String> {
     @Query(value = "{'standard.name':?0}",fields = "{'subjects':1,'firstName':1}")
     List<Student> findByStandard(String standard);
+
+    Student findByRollNo(String rollNo);
+
 }

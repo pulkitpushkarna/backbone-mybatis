@@ -1,10 +1,8 @@
 package com.mybatis.demo.controller;
 
 import com.mybatis.demo.document.Student;
-import com.mybatis.demo.dto.AverageDTO;
-import com.mybatis.demo.dto.DocumentResponseDTO;
-import com.mybatis.demo.dto.FilterDTO;
-import com.mybatis.demo.dto.ResponseDTO;
+import com.mybatis.demo.dto.*;
+import com.mybatis.demo.repository.DocumentRepository;
 import com.mybatis.demo.repository.StudentRepository;
 import com.mybatis.demo.service.impl.DocumentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +18,8 @@ public class DocumentController {
     StudentRepository studentRepository;
     @Autowired
     DocumentServiceImpl documentServiceImpl;
+    @Autowired
+    DocumentRepository documentRepository;
 
     @GetMapping("/")
     ResponseDTO<List<DocumentResponseDTO>> getDocument(){
@@ -27,9 +27,8 @@ public class DocumentController {
     }
 
     @PostMapping("/")
-    String addStudent(@RequestBody Student student){
-        studentRepository.insert(student);
-        return "saved successfully";
+   ResponseDTO saveDocument(@RequestBody DocumentRequestDTO documentRequestDTO){
+        return documentServiceImpl.saveDocument(documentRequestDTO);
 
     }
     @GetMapping("/{standard}")
@@ -41,6 +40,10 @@ public class DocumentController {
     ResponseDTO<List<AverageDTO>> getAverageMarks(@RequestBody FilterDTO filterDTO){
         return documentServiceImpl.getAverageMarks(filterDTO);
 
+    }
+    @GetMapping("/student/{rollNo}")
+    Student getByrollNo(@PathVariable String rollNo){
+        return documentRepository.findByRollNo(rollNo);
     }
 }
 

@@ -387,9 +387,28 @@
                 </td>
                 <td>
                     <div class="form-group">
-                        <select name="className" id="stan-name" class="form-control">
+                        <select name="className" id="stu-standard" class="form-control">
                             <% _.each(standardList.data ,function(standard){%>
                             <option value="<%=standard.name%>"><%=standard.name%></option>
+                            <%})%>
+                        </select>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <select name="className" id="sub1" class="form-control">
+                            <% _.each(subjectList.data ,function(subject){%>
+                            <option value="<%=subject.code%>"><%=subject.code%> <%=subject.name%></option>
+                            <%})%>
+                        </select><br>
+                        <select name="className" id="sub2" class="form-control">
+                            <% _.each(subjectList.data ,function(subject){%>
+                            <option value="<%=subject.code%>"><%=subject.code%> <%=subject.name%></option>
+                            <%})%>
+                        </select><br>
+                        <select name="className" id="sub3" class="form-control">
+                            <% _.each(subjectList.data ,function(subject){%>
+                            <option value="<%=subject.code%>"><%=subject.code%> <%=subject.name%></option>
                             <%})%>
                         </select>
                     </div>
@@ -705,12 +724,37 @@
 
     var StudentView = Backbone.View.extend({
         el: "#content",
+        model: new Documents(),
         template: _.template($("#student-temp").html()),
         events: {
-            "click #add-student": "addStudent"
+            "click #add-new-student": "addStudent"
 
         },
         addStudent: function () {
+            this.model.set({
+                firstName: $("#stu-fname").val(),
+                lastName: $("#stu-lname").val(),
+                rollNo: $("#stu-rollNo").val(),
+                standard: $("#stu-standard").val(),
+                subject1: $("#sub1").val(),
+                subject2: $("#sub2").val(),
+                subject3: $("#sub3").val(),
+            });
+            this.model.save(null, {
+                success: function (response) {
+                    if (response.toJSON().status) {
+                        $("#stu-fname").val("");
+                        $("#stu-lname").val("");
+                        $("#stu-rollNo").val("");
+                        $("#stu-standard").val("");
+                        $("#sub1").val("");
+                        $("#sub2").val("");
+                        $("#sub3").val("");
+                    }
+                    alert(response.toJSON().message);
+
+                }
+            })
 
         },
         initialize: function () {
