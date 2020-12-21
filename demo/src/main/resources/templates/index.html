@@ -253,21 +253,20 @@
         <h2>Get Average Marks</h2><br>
         <a href="" class="btn btn-danger btn-sm mb-3">Go Back</a>
         <a href="#/add-subject" class="btn btn-primary btn-sm mb-3">Add Subjects</a>
-        <a href="" class="btn btn-primary btn-sm mb-3">Add Student</a>
+        <a href="#/add-new-student" class="btn btn-primary btn-sm mb-3">Add Student</a>
         <table class="table table-striped">
             <thead>
             <tr>
-                <th scope="col">Enter Standard Name</th>
-                <th scope="col">Enter Subject Name</th>
+                <th scope="col">Select Standard Name</th>
+                <th scope="col">Select Subject Name</th>
             </tr>
             </thead>
-            <tbody>
             <tr>
                 <td>
                     <div class="form-group">
                         <select name="className" id="standard-name" class="form-control">
                             <% _.each(standardList.data ,function(standard){%>
-                            <option value="<%=standard.name%>"><%=standard.name%> <%=standard.roomNo%></option>
+                            <option value="<%=standard.name%>"><%=standard.name%></option>
                             <%})%>
                         </select>
                     </div>
@@ -284,9 +283,35 @@
 
 
                 <td>
-                    <button class="btn btn-success" id="find-average">Find</button>
+                    <button class="btn btn-success" id="find-average">Find Average</button>
                 </td>
             </tr>
+            <tr></tr>
+            <thead>
+            <tr>
+
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Roll No</th>
+                <th scope="col">Standard</th>
+                <th scope="col">Subjects</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            <% _.each(documentList.data, function(student){%>
+            <tr>
+                <td><%=student.firstName%></td>
+                <td><%=student.lastName%></td>
+                <td><%=student.rollNo%></td>
+                <td><%=student.standard.name%></td>
+                <% _.each(student.subjects,function(subject){%>
+                <td><%=subject.name%></td>
+                <%})%>
+            </tr>
+            <%})%>
+
+            </tbody>
             </tbody>
         </table>
     </div>
@@ -329,6 +354,55 @@
     </div>
 </script>
 
+<script type="text/template" id="student-temp">
+    <div class="container">
+        <h2>Add Student</h2><br>
+        <a href="#/filter" class="btn btn-danger btn-sm mb-3">Go Back</a>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">RollNo</th>
+                <th scope="col">Standard</th>
+                <th scope="col">Subjects</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="stu-fname" required>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="stu-lname" required>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="stu-rollNo" required>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <select name="className" id="stan-name" class="form-control">
+                            <% _.each(standardList.data ,function(standard){%>
+                            <option value="<%=standard.name%>"><%=standard.name%></option>
+                            <%})%>
+                        </select>
+                    </div>
+                </td>
+                <td>
+                    <button class="btn btn-success" id="add-new-student">Save</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</script>
+
 
 <script type="text/javascript">
 
@@ -344,6 +418,9 @@
     var Document = Backbone.Model.extend({
         urlRoot: "/documents/average"
     });
+    var Documents = Backbone.Model.extend({
+        urlRoot: "/documents/"
+    });
 
     var SubjectNameList = Backbone.Model.extend({
         urlRoot: "/subjects/nameList"
@@ -358,6 +435,7 @@
 
     var subjectList = [];
     var standardList = [];
+    var documentList = [];
     var FirstView = Backbone.View.extend({
         el: "#content",
         model: new Student,
@@ -576,6 +654,13 @@
                     that.$el.html(that.template(subjectList));
                 }
             });
+            var documents = new Documents();
+            documents.fetch({
+                success: function (response) {
+                    documentList = response.toJSON();
+                    that.$el.html(that.template(documentList));
+                }
+            })
 
         }
 
@@ -618,6 +703,26 @@
 
     });
 
+    var StudentView = Backbone.View.extend({
+        el: "#content",
+        template: _.template($("#student-temp").html()),
+        events: {
+            "click #add-student": "addStudent"
+
+        },
+        addStudent: function () {
+
+        },
+        initialize: function () {
+            this.render();
+
+        },
+        render: function () {
+            this.$el.html(this.template)
+        }
+
+    });
+
 
     var SystemRouter = Backbone.Router.extend({
 
@@ -627,7 +732,8 @@
             "edit-student/:id": "editView",
             "add-user": "addUser",
             "filter": "filterView",
-            "add-subject": "addSubject"
+            "add-subject": "addSubject",
+            "add-new-student": "addStudentView"
 
         },
 
@@ -653,6 +759,11 @@
         addSubject: function () {
             console.log("add subject view");
             var subjectView = new SubjectView();
+
+        },
+        addStudentView: function () {
+            console.log("add new student in document view")
+            var studentView = new StudentView();
 
         }
 

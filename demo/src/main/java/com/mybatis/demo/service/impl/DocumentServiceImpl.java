@@ -1,9 +1,7 @@
 package com.mybatis.demo.service.impl;
 
 import com.mybatis.demo.document.Student;
-import com.mybatis.demo.dto.AverageDTO;
-import com.mybatis.demo.dto.FilterDTO;
-import com.mybatis.demo.dto.ResponseDTO;
+import com.mybatis.demo.dto.*;
 import com.mybatis.demo.repository.DocumentRepository;
 import com.mybatis.demo.util.Constant;
 import org.slf4j.Logger;
@@ -16,6 +14,7 @@ import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.mongodb.client.model.Filters.and;
@@ -69,5 +68,30 @@ public class DocumentServiceImpl {
         }
         return responseDTO;
 
+    }
+
+    public ResponseDTO<List<DocumentResponseDTO>> getDocument() {
+        ResponseDTO<List<DocumentResponseDTO>> responseDTO = new ResponseDTO<>(Boolean.FALSE, Constant.REQUEST_NOT_PROCESSED);
+        List<Student> studentList = documentRepository.findAll();
+        List<DocumentResponseDTO> documentResponseDTOList = new ArrayList<>();
+        if(!studentList.isEmpty()){
+            for (Student student:studentList){
+                DocumentResponseDTO documentResponseDTO = new DocumentResponseDTO();
+                documentResponseDTO.setFirstName(student.getFirstName());
+                documentResponseDTO.setLastName(student.getLastName());
+                documentResponseDTO.setRollNo(student.getRollNo());
+                documentResponseDTO.setStandard(student.getStandard());
+                documentResponseDTO.setSubjects(student.getSubjects());
+                documentResponseDTOList.add(documentResponseDTO);
+            }
+            responseDTO.setCode(Constant.OK);
+            responseDTO.setStatus(Boolean.TRUE);
+            responseDTO.setMessage(Constant.REQUEST_SUCCESS);
+            responseDTO.setData(documentResponseDTOList);
+        }else {
+            responseDTO.setCode(Constant.BAD_REQUEST);
+            responseDTO.setMessage(Constant.NO_DATA_FOUND);
+        }
+        return responseDTO;
     }
 }

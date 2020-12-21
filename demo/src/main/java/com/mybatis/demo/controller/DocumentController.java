@@ -2,6 +2,7 @@ package com.mybatis.demo.controller;
 
 import com.mybatis.demo.document.Student;
 import com.mybatis.demo.dto.AverageDTO;
+import com.mybatis.demo.dto.DocumentResponseDTO;
 import com.mybatis.demo.dto.FilterDTO;
 import com.mybatis.demo.dto.ResponseDTO;
 import com.mybatis.demo.repository.StudentRepository;
@@ -19,6 +20,11 @@ public class DocumentController {
     StudentRepository studentRepository;
     @Autowired
     DocumentServiceImpl documentServiceImpl;
+
+    @GetMapping("/")
+    ResponseDTO<List<DocumentResponseDTO>> getDocument(){
+        return documentServiceImpl.getDocument();
+    }
 
     @PostMapping("/")
     String addStudent(@RequestBody Student student){
