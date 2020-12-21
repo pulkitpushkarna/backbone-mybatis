@@ -10,7 +10,11 @@ import com.mybatis.demo.util.Constant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
+
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,23 +25,26 @@ public class SubjectServiceImpl implements SubjectService {
     @Autowired
     SubjectRepository subjectRepository;
 
+    @Autowired
+    MongoTemplate mongoTemplate;
+
     private static final Logger log = LoggerFactory.getLogger(SubjectServiceImpl.class);
 
     @Override
     public ResponseDTO addSubject(SubjectRequestDTO subjectRequestDTO) {
         ResponseDTO responseDTO = new ResponseDTO(false, Constant.REQUEST_NOT_PROCESSED);
         validateSubjectRequestDTO(responseDTO, subjectRequestDTO);
-        if(!responseDTO.getStatus()){
+        if (!responseDTO.getStatus()) {
             return responseDTO;
         }
         Subject byCode = subjectRepository.findByCode(subjectRequestDTO.getSubjectCode());
-        if(byCode!=null){
+        if (byCode != null) {
             log.error("Subject with code alreaady exist");
             responseDTO.setStatus(Boolean.FALSE);
             responseDTO.setCode(Constant.OK);
             responseDTO.setMessage("Subject with " + subjectRequestDTO.getSubjectCode() + " already exist");
             responseDTO.setData(byCode);
-        }else {
+        } else {
             Subject subject = new Subject();
             subject.setName(subjectRequestDTO.getName());
             subject.setCode(subjectRequestDTO.getSubjectCode());
@@ -56,12 +63,12 @@ public class SubjectServiceImpl implements SubjectService {
         ResponseDTO<List<SubjectResponseDTO>> responseDTO = new ResponseDTO<>(false, Constant.REQUEST_NOT_PROCESSED);
         List<Subject> subjects = subjectRepository.findAll();
         List<SubjectResponseDTO> subjectResponseDTOList = new ArrayList<>();
-        if(!subjects.isEmpty()){
-            for (Subject subject:subjects){
+        if (!subjects.isEmpty()) {
+            for (Subject subject : subjects) {
                 SubjectResponseDTO subjectResponseDTO = new SubjectResponseDTO();
-               // subjectResponseDTO.setId(subject.getId());
-                subjectResponseDTO.setSubjectCode(subject.getCode());
-                subjectResponseDTO.setSubjectName(subject.getName());
+                // subjectResponseDTO.setId(subject.getId());
+                subjectResponseDTO.setCode(subject.getCode());
+                subjectResponseDTO.setName(subject.getName());
                 subjectResponseDTO.setScore(subject.getScore());
                 subjectResponseDTOList.add(subjectResponseDTO);
             }
@@ -69,7 +76,7 @@ public class SubjectServiceImpl implements SubjectService {
             responseDTO.setStatus(Boolean.TRUE);
             responseDTO.setMessage(Constant.REQUEST_SUCCESS);
             responseDTO.setData(subjectResponseDTOList);
-        }else {
+        } else {
             responseDTO.setCode(Constant.BAD_REQUEST);
             responseDTO.setMessage(Constant.NO_DATA_FOUND);
         }
@@ -90,6 +97,38 @@ public class SubjectServiceImpl implements SubjectService {
         } else {
             responseDTO.setStatus(Boolean.TRUE);
         }
+
+    }
+
+    @Override
+    public ResponseDTO<List<SubjectResponseDTO>> getNameList() {
+        ResponseDTO<List<SubjectResponseDTO>> responseDTO = new ResponseDTO<>(false, Constant.REQUEST_NOT_PROCESSED);
+        List<SubjectResponseDTO> subjectResponseDTOList = new ArrayList<>();
+        Query query = new Query();
+        query
+                .fields()
+                .include("name")
+                .include("code")
+                .exclude("_id");
+        List<Subject> subjects = mongoTemplate.find(query, Subject.class);
+        if (!subjects.isEmpty() || subjects != null){
+            for (Subject subject:subjects) {
+                SubjectResponseDTO subjectResponseDTO = new SubjectResponseDTO();
+                subjectResponseDTO.setName(subject.getName());
+                subjectResponseDTO.setCode(subject.getCode());
+                subjectResponseDTOList.add(subjectResponseDTO);
+            }
+            responseDTO.setCode(Constant.OK);
+            responseDTO.setStatus(Boolean.TRUE);
+            responseDTO.setMessage(Constant.REQUEST_SUCCESS);
+            responseDTO.setData(subjectResponseDTOList);
+        }else {
+            responseDTO.setCode(Constant.BAD_REQUEST);
+            responseDTO.setMessage(Constant.NO_DATA_FOUND);
+        }
+
+        return responseDTO;
+
 
     }
 }

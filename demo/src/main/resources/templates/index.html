@@ -263,14 +263,23 @@
             <tr>
                 <td>
                     <div class="form-group">
-                        <input type="text" class="form-control" id="standard-name" required>
+                        <select name="className" id="standar-name" class="form-control">
+                            <% _.each(data ,function(standard){%>
+                            <option value="<%=standard.name%>"><%=standard.name%> <%=standard.roomNo%></option>
+                            <%})%>
+                        </select>
                     </div>
                 </td>
                 <td>
                     <div class="form-group">
-                        <input type="text" class="form-control" id="subject-name" required>
+                        <select name="className" id="subject-name" class="form-control">
+                            <% _.each(data ,function(subject){%>
+                            <option value="<%=subject.name%>"><%=subject.code%> <%=subject.name%></option>
+                            <%})%>
+                        </select>
                     </div>
                 </td>
+
 
                 <td>
                     <button class="btn btn-success" id="find-average">Find</button>
@@ -294,6 +303,14 @@
 
     var Document = Backbone.Model.extend({
         urlRoot: "/documents/average"
+    });
+
+    var SubjectNameList = Backbone.Model.extend({
+        urlRoot : "/subjects/nameList"
+    });
+
+    var StandardNameList = Backbone.Model.extend({
+        urlRoot : "/standard/nameList"
     });
     var FirstView = Backbone.View.extend({
         el: "#content",
@@ -497,7 +514,21 @@
 
         },
         render: function () {
-            this.$el.html(this.template());
+            var that = this;
+            var standardNameList = new StandardNameList();
+            standardNameList.fetch({
+                success:function (response) {
+                    console.log(response.toJSON());
+                    that.$el.html(that.template(response.toJSON()));
+                }
+            });
+            var subjectNameList = new SubjectNameList();
+            subjectNameList.fetch({
+                success:function (response) {
+                     that.$el.html(that.template(response.toJSON()));
+                }
+            });
+
         }
 
     });

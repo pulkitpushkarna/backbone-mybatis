@@ -2,8 +2,8 @@ package com.mybatis.demo.dto;
 
 public class SubjectResponseDTO {
     private String id;
-    private String subjectCode;
-    private String subjectName;
+    private String code;
+    private String name;
     private Integer score;
 
 
@@ -15,20 +15,20 @@ public class SubjectResponseDTO {
         this.id = id;
     }
 
-    public String getSubjectCode() {
-        return subjectCode;
+    public String getCode() {
+        return code;
     }
 
-    public void setSubjectCode(String subjectCode) {
-        this.subjectCode = subjectCode;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public String getSubjectName() {
-        return subjectName;
+    public String getName() {
+        return name;
     }
 
-    public void setSubjectName(String subjectName) {
-        this.subjectName = subjectName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Integer getScore() {

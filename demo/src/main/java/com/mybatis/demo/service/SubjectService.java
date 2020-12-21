@@ -13,4 +13,6 @@ public interface SubjectService {
     ResponseDTO addSubject(SubjectRequestDTO subjectRequestDTO);
 
     ResponseDTO<List<SubjectResponseDTO>> getAllSubjects();
+
+    ResponseDTO<List<SubjectResponseDTO>> getNameList();
 }

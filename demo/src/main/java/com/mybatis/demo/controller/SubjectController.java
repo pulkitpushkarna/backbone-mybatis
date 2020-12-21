@@ -25,4 +25,9 @@ public class SubjectController {
     ResponseDTO<List<SubjectResponseDTO>> getAllSubjects(){
         return subjectService.getAllSubjects();
     }
+
+    @GetMapping("/nameList")
+    ResponseDTO<List<SubjectResponseDTO>> getNameList(){
+        return subjectService.getNameList();
+    }
 }

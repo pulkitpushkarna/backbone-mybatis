@@ -1,43 +1,33 @@
-package com.mybatis.demo.service;
+package com.mybatis.demo.service.impl;
 
-import com.mongodb.client.AggregateIterable;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.model.Aggregates;
-import com.mongodb.client.model.Filters;
 import com.mybatis.demo.document.Student;
 import com.mybatis.demo.dto.AverageDTO;
 import com.mybatis.demo.dto.FilterDTO;
 import com.mybatis.demo.dto.ResponseDTO;
-import com.mybatis.demo.dto.StudenttDTO;
 import com.mybatis.demo.repository.DocumentRepository;
-import com.mybatis.demo.service.impl.StudentServiceImpl;
 import com.mybatis.demo.util.Constant;
-import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
+
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 
 @Service
-public class DocumentService {
+public class DocumentServiceImpl {
     @Autowired
     MongoTemplate mongoTemplate;
     @Autowired
     DocumentRepository documentRepository;
-    private static final Logger log = LoggerFactory.getLogger(DocumentService.class);
+    private static final Logger log = LoggerFactory.getLogger(DocumentServiceImpl.class);
 
 
     public List<Student> getStudentByClassName(String standard) {
@@ -53,12 +43,12 @@ public class DocumentService {
         ResponseDTO<List<AverageDTO>> responseDTO = new ResponseDTO<>(Boolean.FALSE, Constant.REQUEST_NOT_PROCESSED);
         log.info("FilterDTO " + filterDTO.toString());
         if (filterDTO.getStandardName() != null && filterDTO.getSubjectName() != null && !filterDTO.getSubjectName().trim().equals("") && !filterDTO.getStandardName().trim().equals("")) {
-            Aggregation aggregation = Aggregation.newAggregation(
-                    Aggregation.match(Criteria.where("standard.name").is(filterDTO.getStandardName())),
-                    Aggregation.unwind("subjects"),
-                    Aggregation.group("subjects.name").sum("subjects.score").as("total"),
-                    Aggregation.match(Criteria.where("_id").is(filterDTO.getSubjectName())),
-                    Aggregation.project()
+            Aggregation aggregation = newAggregation(
+                    match(Criteria.where("standard.name").is(filterDTO.getStandardName())),
+                    unwind("subjects"),
+                    group("subjects.name").sum("subjects.score").as("total"),
+                    match(Criteria.where("_id").is(filterDTO.getSubjectName())),
+                    project()
                             .and("_id").as("subjectName")
                             .and("total").as("averageMarks")
 
