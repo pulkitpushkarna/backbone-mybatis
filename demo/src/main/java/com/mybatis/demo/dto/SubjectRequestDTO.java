@@ -3,7 +3,7 @@ package com.mybatis.demo.dto;
 public class SubjectRequestDTO {
 
     private String name;
-    private String subjectCode;
+    private String code;
     private Integer score;
 
 
@@ -15,12 +15,12 @@ public class SubjectRequestDTO {
         this.name = name;
     }
 
-    public String getSubjectCode() {
-        return subjectCode;
+    public String getCode() {
+        return code;
     }
 
-    public void setSubjectCode(String subjectCode) {
-        this.subjectCode = subjectCode;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public Integer getScore() {

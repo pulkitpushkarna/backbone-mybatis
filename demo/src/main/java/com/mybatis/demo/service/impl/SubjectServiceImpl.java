@@ -37,17 +37,17 @@ public class SubjectServiceImpl implements SubjectService {
         if (!responseDTO.getStatus()) {
             return responseDTO;
         }
-        Subject byCode = subjectRepository.findByCode(subjectRequestDTO.getSubjectCode());
+        Subject byCode = subjectRepository.findByCode(subjectRequestDTO.getCode());
         if (byCode != null) {
             log.error("Subject with code alreaady exist");
             responseDTO.setStatus(Boolean.FALSE);
             responseDTO.setCode(Constant.OK);
-            responseDTO.setMessage("Subject with " + subjectRequestDTO.getSubjectCode() + " already exist");
+            responseDTO.setMessage("Subject with code " + subjectRequestDTO.getCode() + " already exist");
             responseDTO.setData(byCode);
         } else {
             Subject subject = new Subject();
             subject.setName(subjectRequestDTO.getName());
-            subject.setCode(subjectRequestDTO.getSubjectCode());
+            subject.setCode(subjectRequestDTO.getCode());
             subject.setScore(subjectRequestDTO.getScore());
             subjectRepository.insert(subject);
             responseDTO.setCode(Constant.OK);
@@ -91,7 +91,7 @@ public class SubjectServiceImpl implements SubjectService {
         } else if (subjectRequestDTO.getScore() == null) {
             responseDTO.setMessage("Subject score cannot be null");
             log.info("Suject score is null");
-        } else if (subjectRequestDTO.getSubjectCode() == null || subjectRequestDTO.getSubjectCode().trim().equals("")) {
+        } else if (subjectRequestDTO.getCode() == null || subjectRequestDTO.getCode().trim().equals("")) {
             responseDTO.setMessage("Subject code cannot be null");
             log.info("Subject code cannot be null");
         } else {

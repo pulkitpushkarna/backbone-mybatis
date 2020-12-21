@@ -266,7 +266,7 @@
                 <td>
                     <div class="form-group">
                         <select name="className" id="standard-name" class="form-control">
-                            <% _.each(data ,function(standard){%>
+                            <% _.each(standardList.data ,function(standard){%>
                             <option value="<%=standard.name%>"><%=standard.name%> <%=standard.roomNo%></option>
                             <%})%>
                         </select>
@@ -275,7 +275,7 @@
                 <td>
                     <div class="form-group">
                         <select name="className" id="subject-name" class="form-control">
-                            <% _.each(data ,function(subject){%>
+                            <% _.each(subjectList.data ,function(subject){%>
                             <option value="<%=subject.name%>"><%=subject.code%> <%=subject.name%></option>
                             <%})%>
                         </select>
@@ -294,7 +294,7 @@
 <script type="text/template" id="subject-temp">
     <div class="container">
         <h2>Add Subject</h2><br>
-        <a href="" class="btn btn-danger btn-sm mb-3">Go Back</a>
+        <a href="#/filter" class="btn btn-danger btn-sm mb-3">Go Back</a>
         <table class="table table-striped">
             <thead>
             <tr>
@@ -321,7 +321,7 @@
                     </div>
                 </td>
                 <td>
-                    <button class="btn btn-success" id="add-subjecct">Save</button>
+                    <button class="btn btn-success" id="add-subject">Save</button>
                 </td>
             </tr>
             </tbody>
@@ -346,12 +346,18 @@
     });
 
     var SubjectNameList = Backbone.Model.extend({
-        urlRoot : "/subjects/nameList"
+        urlRoot: "/subjects/nameList"
     });
 
     var StandardNameList = Backbone.Model.extend({
-        urlRoot : "/standard/nameList"
+        urlRoot: "/standard/nameList"
     });
+    var Subject = Backbone.Model.extend({
+        urlRoot: "/subjects/"
+    });
+
+    var subjectList = [];
+    var standardList = [];
     var FirstView = Backbone.View.extend({
         el: "#content",
         model: new Student,
@@ -537,13 +543,13 @@
                 standardName: $("#standard-name").val(),
                 subjectName: $("#subject-name").val()
             });
-            this.model.save(null,{
+            this.model.save(null, {
                 success: function (response) {
                     console.log(response.toJSON());
-                    if(!response.toJSON().status){
+                    if (!response.toJSON().status) {
                         alert(response.toJSON().message);
-                    }else {
-                        alert(response.toJSON().data[0].subjectName +"  "+response.toJSON().data[0].averageMarks);
+                    } else {
+                        alert(response.toJSON().data[0].subjectName + "  " + response.toJSON().data[0].averageMarks);
                     }
                 }
             });
@@ -557,15 +563,17 @@
             var that = this;
             var standardNameList = new StandardNameList();
             standardNameList.fetch({
-                success:function (response) {
+                success: function (response) {
                     console.log(response.toJSON());
-                    that.$el.html(that.template(response.toJSON()));
+                    standardList = response.toJSON();
+                    that.$el.html(that.template(standardList));
                 }
             });
             var subjectNameList = new SubjectNameList();
             subjectNameList.fetch({
-                success:function (response) {
-                     that.$el.html(that.template(response.toJSON()));
+                success: function (response) {
+                    subjectList = response.toJSON();
+                    that.$el.html(that.template(subjectList));
                 }
             });
 
@@ -575,18 +583,36 @@
 
     var SubjectView = Backbone.View.extend({
         el: "#content",
+        model: new Subject(),
         template: _.template($("#subject-temp").html()),
         events: {
             "click #add-subject": "addSubject"
 
         },
-        addSubject:function(){
+        addSubject: function () {
+            this.model.set({
+                name: $("#sub-name").val(),
+                code: $("#sub-code").val(),
+                score: $("#sub-score").val(),
+
+            });
+            this.model.save(null, {
+                success: function (response) {
+                    if (response.toJSON().status) {
+                        $("#sub-name").val("");
+                        $("#sub-code").val("");
+                        $("#sub-score").val("");
+                    }
+                    alert(response.toJSON().message);
+
+                }
+            })
 
         },
-        initialize :function () {
+        initialize: function () {
             this.render();
         },
-        render:function () {
+        render: function () {
             this.$el.html(this.template());
         }
 
@@ -601,7 +627,7 @@
             "edit-student/:id": "editView",
             "add-user": "addUser",
             "filter": "filterView",
-            "add-subject":"addSubject"
+            "add-subject": "addSubject"
 
         },
 
@@ -624,7 +650,7 @@
             var documentView = new DocumentView();
 
         },
-        addSubject:function () {
+        addSubject: function () {
             console.log("add subject view");
             var subjectView = new SubjectView();
 
