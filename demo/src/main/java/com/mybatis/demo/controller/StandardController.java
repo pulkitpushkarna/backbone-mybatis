@@ -9,6 +9,7 @@ import com.mybatis.demo.service.StandardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 
 @RestController
@@ -21,11 +22,11 @@ public class StandardController {
     StandardRepository standardRepository;
 
     @PostMapping("/")
-    String addStudent(@RequestBody Standard standard){
-        standardRepository.insert(standard);
-        return "saved successfully";
+    ResponseDTO addStandard(@RequestBody StandardResponseDTO standardResponseDTO){
+        return standardService.addStandard(standardResponseDTO);
 
     }
+
 
     @GetMapping("/nameList")
     ResponseDTO<List<StandardResponseDTO>> getStandardNameList(){

@@ -50,6 +50,8 @@ public class StudentServiceImpl implements StudentService {
             responseDTO.setCode(Constant.BAD_REQUEST);
             responseDTO.setStatus(Boolean.FALSE);
             responseDTO.setMessage("No data found");
+            responseDTO.setLoginedUser(userService.getCurrentUser().getUserName());
+            responseDTO.setUserRole(userService.getCurrentUser().getRoles());
         }
         return responseDTO;
     }

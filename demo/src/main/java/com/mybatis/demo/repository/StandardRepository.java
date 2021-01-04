@@ -7,5 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface StandardRepository extends MongoRepository<Standard,String> {
-    Standard findByName(String rollNo);
+    Standard findByName(String name);
+    Standard findByRoomNo(String roomNo);
 }

@@ -253,6 +253,7 @@
         <h2>Get Average Marks</h2><br>
         <a href="" class="btn btn-danger btn-sm mb-3">Go Back</a>
         <a href="#/add-subject" class="btn btn-primary btn-sm mb-3">Add Subjects</a>
+        <a href="#/add-standard" class="btn btn-primary btn-sm mb-3">Add Standard</a>
         <a href="#/add-new-student" class="btn btn-primary btn-sm mb-3">Add Student</a>
         <table class="table table-striped">
             <thead>
@@ -422,6 +423,38 @@
     </div>
 </script>
 
+<script type="text/template" id="standard-temp">
+    <div class="container">
+        <h2>Add Standard</h2><br>
+        <a href="#/filter" class="btn btn-danger btn-sm mb-3">Go Back</a>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Enter Standard Name</th>
+                <th scope="col">Enter Room no</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="stan-name" required>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="stan-roomNo" required>
+                    </div>
+                </td>
+                <td>
+                    <button class="btn btn-success" id="add-new-standard">Save</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</script>
+
 
 <script type="text/javascript">
 
@@ -450,6 +483,9 @@
     });
     var Subject = Backbone.Model.extend({
         urlRoot: "/subjects/"
+    });
+    var Standard = Backbone.Model.extend({
+        urlRoot: "/standard/"
     });
 
     var subjectList = [];
@@ -485,6 +521,7 @@
             this.model.fetch({
                 success: function (response) {
                     model = response.toJSON();
+                    console.log()
                     that.$el.html(that.template(model));
                     console.log(model);
                 },
@@ -767,6 +804,40 @@
 
     });
 
+    var StandardView = Backbone.View.extend({
+        el: "#content",
+        model: new Standard(),
+        template: _.template($("#standard-temp").html()),
+        events: {
+            "click #add-new-standard": "addNewStandard"
+
+        },
+        addNewStandard:function(){
+            this.model.set({
+                name:$("#stan-name").val(),
+                roomNo:$("#stan-roomNo").val()
+            });
+            this.model.save(null,{
+                success:function (response) {
+                    alert(response.toJSON().message);
+                    if(response.toJSON().status){
+                        $("#stan-name").val("");
+                        $("#stan-roomNo").val("");
+                    }
+
+                }
+            })
+
+        },
+        initialize:function () {
+            this.render();
+        },
+        render:function () {
+            this.$el.html(this.template);
+        }
+
+    });
+
 
     var SystemRouter = Backbone.Router.extend({
 
@@ -777,7 +848,8 @@
             "add-user": "addUser",
             "filter": "filterView",
             "add-subject": "addSubject",
-            "add-new-student": "addStudentView"
+            "add-new-student": "addStudentView",
+            "add-standard": "addStandard"
 
         },
 
@@ -806,8 +878,13 @@
 
         },
         addStudentView: function () {
-            console.log("add new student in document view")
+            console.log("add new student in document view");
             var studentView = new StudentView();
+
+        },
+        addStandard:function () {
+            console.log("add new standard view");
+            var standardView = new StandardView();
 
         }
 

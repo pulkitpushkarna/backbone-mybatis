@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  mysql-standalone:
+    image: mysql:latest
+    networks:
+    - another-network
+    environment:
+    - MYSQL_ROOT_PASSWORD=ttn@2019
+    - MYSQL_DATABASE=sql-docker
+    - MYSQL_USER=test
+    - MYSQL_PASSWORD=test@123
+    ports:
+    - 3606:3606
+
+  mymongodb:
+    image: mongo:latest
+    networks:
+    - another-network
+    container_name: "mymongodb"
+    ports:
+    - 27017:27017
+
+  springboot-docker-container:
+    image: springboot-docker-container:1.2
+    networks:
+    - another-network
+    ports:
+    - 8081:8081
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    depends_on:
+    - mysql-standalone
+    links:
+    - mymongodb
+    - mysql-standalone
+
+networks:
+  another-network:

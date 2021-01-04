@@ -10,4 +10,5 @@ import java.util.List;
 public interface StandardService {
     ResponseDTO<List<StandardResponseDTO>> getStandardNameList();
 
+    ResponseDTO addStandard(StandardResponseDTO standardResponseDTO);
 }
