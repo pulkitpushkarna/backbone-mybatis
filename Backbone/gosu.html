@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td,
+        th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+</head>
+
+<body>
+
+    <table id='a'>
+        <tr>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Edit</th>
+        </tr>
+    </table>
+
+    <script>
+        let db = [{ id: 1, name: "Abhishek", sname: "Goswamy" },
+        { id: 2, name: "Kapil", sname: "Chauhan" }
+        ]
+        var body = document.body;
+        var tb1 = document.getElementById("a")
+        var table = print(db, tb1);
+
+
+        function remove(i, db, tb1) {
+            let bkpDB = [...db]
+            bkpDB.splice(i, 1)
+            console.log("hi");
+            print(bkpDB, tb1)
+        }
+
+        function edit(i, name, surname) {
+            console.log(i,name,surname)
+        }
+
+
+
+        function print(db, tb1) {
+            var new_tbody = document.createElement('tbody');
+            tb1.innerHTML = new_tbody
+            for (let i = 0; i < db.length; i++) {
+                tr = document.createElement('tr');
+
+                var td1 = document.createElement('td');
+                td1.textContent = db[i].name;
+                tr.appendChild(td1);
+
+                var td2 = document.createElement('td');
+                td2.textContent = db[i].sname;
+                tr.appendChild(td2);
+
+                var td3 = document.createElement('td');
+                var btn = document.createElement("BUTTON")
+                btn.innerText = "X";
+                btn.onclick = () => remove(i, db, tb1)
+                td3.appendChild(btn);
+                tr.appendChild(td3);
+
+                var td4 = document.createElement('td');
+                var btn = document.createElement("BUTTON")
+                btn.innerText = "Edit";
+                btn.onclick = () => edit(i, db[i].name, db[i].sname)
+                td3.appendChild(btn);
+                tr.appendChild(td3);
+
+                tb1.appendChild(tr);
+            }
+            return tb1
+        }
+        body.appendChild(table)
+
+
+    </script>
+
+</body>
+
+</html>
