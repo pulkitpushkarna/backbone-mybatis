@@ -41,6 +41,13 @@ public class DocumentController {
         return documentServiceImpl.getAverageMarks(filterDTO);
 
     }
+
+    @GetMapping("/average")
+    ResponseDTO<List<AverageDTO>> getAverageMark(@RequestParam(value = "standardName") String standardName,
+                                                 @RequestParam(value = "subjectName") String subjectName){
+        return documentServiceImpl.getAverageMark(standardName,subjectName);
+
+    }
     @GetMapping("/student/{rollNo}")
     Student getByrollNo(@PathVariable String rollNo){
         return documentRepository.findByRollNo(rollNo);

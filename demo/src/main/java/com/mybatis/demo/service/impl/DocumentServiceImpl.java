@@ -90,6 +90,31 @@ public class DocumentServiceImpl {
         return responseDTO;
 
     }
+    public ResponseDTO<List<AverageDTO>> getAverageMark(String standardName,String subjectName) {
+        ResponseDTO<List<AverageDTO>> responseDTO = new ResponseDTO<>(Boolean.FALSE, Constant.REQUEST_NOT_PROCESSED);
+            Aggregation aggregation = newAggregation(
+                    match(Criteria.where("standard.name").is(standardName)),
+                    unwind("subjects"),
+                    group("subjects.name").sum("subjects.score").as("total"),
+                    match(Criteria.where("_id").is(subjectName)),
+                    project()
+                            .and("_id").as("subjectName")
+                            .and("total").as("averageMarks")
+
+            );
+            List<AverageDTO> averageDTOList = mongoTemplate.aggregate(aggregation, "student", AverageDTO.class).getMappedResults();
+            if (!averageDTOList.isEmpty()) {
+                responseDTO.setStatus(Boolean.TRUE);
+                responseDTO.setCode(Constant.OK);
+                responseDTO.setMessage(Constant.REQUEST_SUCCESS);
+                responseDTO.setData(averageDTOList);
+            } else {
+                responseDTO.setCode(Constant.BAD_REQUEST);
+                responseDTO.setMessage("No Data found");
+            }
+        return responseDTO;
+
+    }
 
     public ResponseDTO<List<DocumentResponseDTO>> getDocument() {
         ResponseDTO<List<DocumentResponseDTO>> responseDTO = new ResponseDTO<>(Boolean.FALSE, Constant.REQUEST_NOT_PROCESSED);

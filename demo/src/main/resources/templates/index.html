@@ -29,6 +29,8 @@
         <% if(userRole=="ROLE_ADMIN"){ %>
         <h3><a href="#/add-user" class="btn btn-success">Add New User</a></h3>
         <a href="#/add-student" class="btn btn-primary">Add New Student</a>
+        <button id="req-param" class="btn btn-primary">Request Param Api Test</button>
+
 
         <% } %>
 
@@ -496,7 +498,8 @@
         model: new Student,
         template: _.template($("#tem").html()),
         events: {
-            "click #delete": "delete"
+            "click #delete": "delete",
+            "click #req-param":"reqParam"
         },
         delete: function (e) {
             console.log(jQuery(e.currentTarget).val());
@@ -513,6 +516,18 @@
                 }
             });
         },
+        reqParam: function(){
+            var document = new Document();
+            document.fetch({data:$.param({
+                    standardName:"first",
+                    subjectName:"Maths"
+                }),
+            success:function (response) {
+                alert(response.toJSON().data[0].subjectName + "  " + response.toJSON().data[0].averageMarks)
+
+            }})
+
+        },
         initialize: function () {
             this.render();
         },
@@ -521,9 +536,7 @@
             this.model.fetch({
                 success: function (response) {
                     model = response.toJSON();
-                    console.log()
                     that.$el.html(that.template(model));
-                    console.log(model);
                 },
                 error: function (errorResponse) {
                     console.log(errorResponse)
