@@ -22,7 +22,7 @@ services:
     - 27017:27017
 
   springboot-docker-container:
-    image: springboot-docker-container:1.2
+    image: springboot-docker-container:1.0
     networks:
     - another-network
     ports:
