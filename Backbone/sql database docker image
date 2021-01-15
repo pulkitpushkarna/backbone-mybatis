@@ -1,0 +1,89 @@
+sql database docker image
+
+ docker run -p 3306:3306 --name mysql -e MYSQL_ROOT_PASSWORD=ttn@2019 -e MYSQL_DATABASE=todos -e MYSQL_USER=todos-user -e MYSQL_PASSWORD=dummytodos -d  mysql:latest
+
+docker run --detach --env MYSQL_ROOT_PASSWORD=dummypassword --env MYSQL_USER=todos-user --env MYSQL_PASSWORD=dummytodos --env MYSQL_DATABASE=todos --name mysql --publish 3306:3306 mysql:latest
+
+sudo /etc/init.d/mysql stop
+
+
+monogo databse 
+
+ docker run --name mongo -p 27017:27017 -d mongo
+
+java build
+
+ docker build -f Dockerfile -t app.jar .
+//docker sql bash
+docker exec -it /bin/bash
+
+clearing container
+
+docker rm -f $(sudo docker ps -aq)
+
+ docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' f34a59108dd2
+
+ sudo /etc/init.d/mysql start
+
+ sudo service mongodb stop
+
+
+
+sql script for tables
+
+create table faculty
+(
+    faculty_id   int auto_increment
+        primary key,
+    name         varchar(255) not null,
+    class_name   varchar(255) null,
+    faculty_code varchar(255) null
+);
+
+create table persistent_logins
+(
+    username  varchar(64) not null,
+    series    varchar(64) not null
+        primary key,
+    token     varchar(64) not null,
+    last_used timestamp   not null
+);
+
+create table student
+(
+    student_id int auto_increment
+        primary key,
+    roll_no    varchar(225) not null,
+    first_name varchar(255) not null,
+    last_name  varchar(255) not null,
+    class_name varchar(255) not null,
+    address    varchar(255) not null,
+    city       varchar(255) not null,
+    deleted    tinyint(1)   not null
+);
+
+create table student_class
+(
+    id           int auto_increment
+        primary key,
+    class_code   varchar(255) not null,
+    class_name   varchar(255) not null,
+    faculty_name varchar(255) not null
+);
+
+create table user
+(
+    id               int auto_increment
+        primary key,
+    user_name        varchar(255) not null,
+    password         varchar(255) not null,
+    confirm_password varchar(255) not null,
+    roles            varchar(255) not null,
+    active           tinyint(1)   not null
+
+);
+
+insert into user values (1,"admin","pass","pass","ROLE_ADMIN",1);
+
+
+
