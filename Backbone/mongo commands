@@ -1,0 +1,74 @@
+db.student.aggregate([ {"$match":{"subjects.name":"Maths"},{"$project":{"firstName":1, "_id": 0} }, { "$group":{"_id":"$subjects.score","count":{"$sum":1}}}])
+
+db.student.aggregate([{"$match":{"subjects.name":"Maths"}},{"$project":{"firstName":1,"_id":0}}])
+db.student.aggregate([{"$project":{"subjects.name":1,"_id":0}},{"$group":{"_id":"$subjects.name"}}])
+db.student.aggregate([{"$project":{"standard":1,"firstName":1,"_id":0}},{"$group":{"_id":"$standard.name"}}])
+db.student.aggregate([{"$project":{"standard.name":1,"_id":0}},{"$group":{"_id":"$standard.name","count":{"$sum":1}}}])
+db.student.aggregate([{"$group":{"_id":"$subjects.name","count":{"$sum":1}}}])
+
+db.student.aggregate([{"$group":{"_id":}}])
+
+db.student.aggregate([{"$group":{"_id":"$subjects.score"}}])
+
+db.student.find({"subjects.score":{"$elemMatch":{"standard.name":"first","subjects.name":"Engish"}}})
+
+{"$and":[{"standard":{"$elemMatch":{"name":"first"}}},{"subjects":{"$elemMatch":{"name":"SST"}}}]}
+
+db.student.find({"standard.name":"first","subjects.name":"Engish"},{"firsName":1})
+db.student.aggregate([{"$match":{},"$group":{"_id":"$subjects","total":{"$sum":"$subjects.score"}}}])
+
+
+select avg(m)
+
+db.student.count()
+db.student.distinct
+
+This answer is not useful
+What framework are you using? This is not MongoDB shell and looks like some weird wrapper around MapReduce. In that case $unwind would not be available, and you need it for user in the aggregation framework. Here's what you want in the mongo shell:
+
+db.articles.aggregate([
+  {$match: { class_date: { $gte: date } } },
+  {$project: { _id: 0, class_artist: 1 } },
+  {$unwind: "$class_artist" },
+  {$group: { _id: "$class_artist", tags: { $sum: 1 } }},
+  {$project: { _id: 0,class_artist: "$_id", tags: 1 } },
+  {$sort: { tags: -1 } }
+])
+
+
+db.student.aggregate([
+	{"$match":{"standard.name":"third"}},
+	{"$unwind":"$subjects"},
+	{"$group":{"_id":"$subjects.name","total":{"$sum":"$subjects.score"}}}
+ 
+])
+
+db.student.aggregate([
+	{"$unwind":"$subjects"},
+	{"$group":{"_id":"$subjects.name","total":{"$sum":"$subjects.score"}}}
+ 
+])
+
+> db.student.aggregate([
+... {"$match":{"standard.name":"third"}},
+... {"$unwind":"$subjects"},
+... {"$group":{"_id":"$subjects.name","total":{"$sum":"$subjects.score"}}},
+... {"$match":{"_id":"Maths"}}
+...  
+... ])
+
+
+ek model me 2 api
+
+db.Students.aggregate([
+	{"$match":{"standard":"6"}},
+	{"$unwind":{"$subjects"}},
+	{"$group":{"_id":"$subjects.paperName","Average":{"$avg":"$subjects.marks"}}},
+	{"$match":{"_id":"Maths"}}
+
+])
+ high level provide traslation service
+ localisation
+ difference between localisatio
+
+globlisation atomation project

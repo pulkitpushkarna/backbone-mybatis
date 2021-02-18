@@ -21,6 +21,16 @@
 		<%=list.name%>
 
 		<h3><a href="#/testing/101/kapil/<%=list%>" class="btn btn-danger">Test</a></h3>
+		Enter First Digit<input type="text" class="form-control" id="first" required>
+		Enter Second Digit<input type="text" class="form-control" id="second" required>
+		<button class="btn btn-success" id="same-page-action">ADD</button><br>
+		<div>
+					<% if(sum != ""){ %>
+
+		Answer: <%=first%> + <%=second%> = <%=sum%>
+			<% } %>
+
+	</div>
 
 
 
@@ -34,10 +44,28 @@
 
 	<script type="text/javascript">
 		var list =[];
+		var first = "";
+		var second = "";
+		var sum = "";
 
 		var FirstView = Backbone.View.extend({
 			el:"#container",
 			template: _.template($("#temp").html()),
+			events :{
+				"click #same-page-action":"doAction"
+
+			},
+			doAction:function(){
+				 first = $("#first").val()
+				 second = $("#second").val()
+			    sum = first+second
+			    var a=5;
+			    var b =6;
+			    var c= a+b;
+			    console.log(sum+" "+c)
+				this.$el.html(this.template([first,second,sum]));
+
+			},
 		
 			initialize:function(){
 				this.render();
